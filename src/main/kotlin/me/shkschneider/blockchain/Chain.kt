@@ -5,7 +5,8 @@ import me.shkschneider.crypto.Coin
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
 import me.shkschneider.crypto.toCoin
-import me.shkschneider.participants.Miner
+import me.shkschneider.participants.ColdMiner
+import me.shkschneider.participants.HotMiner
 import me.shkschneider.stringOf
 
 class Chain {
@@ -18,7 +19,7 @@ class Chain {
 
     init {
         println("version=${Consensus.version}")
-        Consensus.genesis.copy(nonce = Miner().mine(Consensus.genesis)).let { genesis ->
+        Consensus.genesis.copy(nonce = ColdMiner().mine(Consensus.genesis)).let { genesis ->
             println("block[${genesis.height}]=${genesis.hash}")
             genesis.validate()
             add(genesis)
