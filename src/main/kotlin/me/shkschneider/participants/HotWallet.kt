@@ -35,16 +35,16 @@ class HotWallet(
     fun balance(): Coin =
         chain.utxos.filter { it.to == public }.toCoin()
 
-    fun send(to: PublicKey, amount: Coin) {
-        if (balance() < amount) throw BlockchainException("balance")
+    fun send(to: PublicKey, amount: Coin, fees: Coin = Coin(sat = 1)) {
+        if (balance() < amount + fees) throw BlockchainException("balance")
         val inputs = mutableListOf<TransactionOutput>()
         chain.utxos.filter { it.to == public }.sortedBy { it.amount }.forEach { utxo ->
             inputs += utxo
-            if (inputs.toCoin() >= amount) {
+            if (inputs.toCoin() >= amount + fees) {
                 return@forEach
             }
         }
-        val tx = outgoing(inputs, to, amount)
+        val tx = outgoing(inputs, to, amount, fees)
         send(tx)
     }
 

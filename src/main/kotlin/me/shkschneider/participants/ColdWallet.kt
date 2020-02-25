@@ -24,15 +24,16 @@ open class ColdWallet(
 
     fun address() = public
 
-    fun outgoing(inputs: MutableList<TransactionOutput>, to: PublicKey, amount: Coin) =
-        Transaction(inputs = inputs).apply {
+    fun outgoing(inputs: MutableList<TransactionOutput>, to: PublicKey, amount: Coin, fees: Coin): Transaction {
+        return Transaction(inputs = inputs).apply {
             val txo = TransactionOutput(to, amount)
             outputs.add(txo)
-            val change: Coin = (inputs.toCoin() - amount)
+            val change: Coin = (inputs.toCoin() - amount) - fees
             if (change > 0) {
                 outputs.add(TransactionOutput(public, change))
             }
         }.apply { sign(private) }
+    }
 
     override fun toString(): String = "ColdWallet {" + stringOf(
         " address=${address().toHash()}"

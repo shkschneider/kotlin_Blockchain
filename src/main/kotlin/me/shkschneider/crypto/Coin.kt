@@ -1,10 +1,13 @@
 package me.shkschneider.crypto
 
+import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.stringOf
 import kotlin.math.roundToInt
 
-internal fun List<TransactionOutput>.toCoin(): Coin = Coin(sumBy { it.amount.sat })
+internal fun List<TransactionOutput>.toCoin(): Coin = Coin(sat = sumBy { it.amount.sat })
+
+internal val List<Transaction>.fees: Coin get() = Coin(sat = sumBy { it.fees.sat })
 
 /**
  * 1 bit =     100 cent

@@ -14,8 +14,8 @@ fun Transaction.validate() {
     !isCoinbase || inputs.isEmpty() || throw BlockchainException()
     inputs.forEach { it.validate() }
     outputs.forEach { it.validate() }
-    !isCoinbase || outputs.toCoin() == Consensus.reward || throw BlockchainException()
-    isCoinbase || inputs.toCoin() == outputs.toCoin() || throw BlockchainException()
+    !isCoinbase || outputs.toCoin() > 0 || throw BlockchainException()
+    isCoinbase || inputs.toCoin() >= outputs.toCoin() || throw BlockchainException()
     isSigned || throw BlockchainException()
 }
 
@@ -35,5 +35,5 @@ fun Chain.validate() {
     mempool.forEach { it.validate() }
     blocks.forEach { it.validate() }
     utxos.forEach { it.validate() }
-    amount.sat == (blocks.size * Consensus.reward.sat) || throw BlockchainException()
+    amount.sat > 0 || throw BlockchainException()
 }

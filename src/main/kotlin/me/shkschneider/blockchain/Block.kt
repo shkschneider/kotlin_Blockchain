@@ -3,6 +3,7 @@ package me.shkschneider.blockchain
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
+import me.shkschneider.crypto.Coin
 import me.shkschneider.crypto.Hash
 import me.shkschneider.crypto.Hashable
 import me.shkschneider.stringOf
@@ -19,6 +20,7 @@ data class Block(
 
     val inputs: List<TransactionOutput> get() = transactions.flatMap { it.inputs }
     val outputs: List<TransactionOutput> get() = transactions.flatMap { it.outputs }
+    val fees: Coin get() = Coin(sat = transactions.sumBy { it.fees.sat })
     val size: Int get() = transactions.size
 
     fun add(tx: Transaction): Boolean {

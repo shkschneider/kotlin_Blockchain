@@ -2,23 +2,11 @@ package me.shkschneider.participants
 
 import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Transaction
-import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.crypto.difficulty
 import kotlin.random.Random
 
 open class Miner {
-
-    fun coinbase(coldWallet: ColdWallet): Transaction =
-        Transaction(
-            inputs = mutableListOf(),
-            outputs = mutableListOf(
-                TransactionOutput(
-                    coldWallet.address(),
-                    Consensus.reward
-                )
-            )
-        ).apply { coldWallet.sign(this) }
 
     fun unstack(mempool: List<Transaction>): List<Transaction> =
         with(mutableListOf<Transaction>()) {

@@ -3,7 +3,9 @@ package me.shkschneider.participants
 import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Chain
 import me.shkschneider.blockchain.Transaction
+import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
+import me.shkschneider.crypto.fees
 
 class Node(
     private val chain: Chain,
@@ -25,13 +27,14 @@ class Node(
     }
 
     fun mine(): Block {
-        val coinbase = coinbase(hotWallet)
         val txs = unstack(chain.mempool)
         val blk = Block(
             previous = chain.blocks.lastOrNull()?.hash,
             height = chain.height,
             difficulty = chain.difficulty
         ).apply {
+            val reward = Consensus.reward(chain.height) + txs.fees
+            val coinbase = Transaction.coinbase(reward, hotWallet)
             transactions += coinbase
             transactions += txs
         }
