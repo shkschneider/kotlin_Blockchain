@@ -18,7 +18,7 @@ open class HotMiner(
                 if (tx.inputs.none { txo -> flatMap { it.inputs }.contains(txo) }) {
                     this += tx
                 }
-                if (size == Consensus.blockSize - 1) return@with this
+                if (size == Consensus.Rules.blockSize - 1) return@with this
             }
             return this
         }

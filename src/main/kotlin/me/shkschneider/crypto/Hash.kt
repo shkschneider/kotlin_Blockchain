@@ -1,21 +1,24 @@
 package me.shkschneider.crypto
 
 import me.shkschneider.consensus.Consensus
+import java.security.Key
 import java.security.MessageDigest
 import javax.xml.bind.DatatypeConverter
 
 fun String?.toHash(): Hash = orEmpty().toByteArray().toHash()
 
+fun Key.toHash() = toString().toHash()
+
 private fun ByteArray.toHex(): String = DatatypeConverter.printHexBinary(this)
 
-private fun ByteArray.toHash(): Hash = MessageDigest.getInstance(Consensus.algorithms.first)
+private fun ByteArray.toHash(): Hash = MessageDigest.getInstance(Consensus.Algorithms.hash)
     .digest(this)
     .toHex()
     .toLowerCase()
 
 typealias Hash = String
 
-val Hash.difficulty: Int get() = takeWhile { it == Consensus.prefix }.count()
+val Hash.difficulty: Int get() = takeWhile { it == Consensus.Rules.prefix }.count()
 
 abstract class Hashable {
 

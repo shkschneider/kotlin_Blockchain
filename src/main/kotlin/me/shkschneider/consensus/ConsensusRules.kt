@@ -27,7 +27,7 @@ fun Block.validate() {
     height >= 0 || throw BlockchainException()
     coinbase.isCoinbase || throw BlockchainException()
     transactions.count { it.isCoinbase } == 1 || throw BlockchainException()
-    size <= Consensus.blockSize || throw BlockchainException()
+    size <= Consensus.Rules.blockSize || throw BlockchainException()
     transactions.forEach { it.validate() }
 }
 
