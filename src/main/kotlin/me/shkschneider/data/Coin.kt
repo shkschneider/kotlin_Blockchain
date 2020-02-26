@@ -1,13 +1,16 @@
-package me.shkschneider.crypto
+package me.shkschneider.data
 
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.stringOf
 import kotlin.math.roundToInt
 
-internal fun List<TransactionOutput>.toCoin(): Coin = Coin(sat = sumBy { it.amount.sat })
+internal fun List<TransactionOutput>.toCoin(): Coin =
+    Coin(sat = sumBy { it.amount.sat })
 
-internal val List<Transaction>.fees: Coin get() = Coin(sat = sumBy { it.fees.sat })
+internal val List<Transaction>.fees: Coin
+    get() = Coin(
+        sat = sumBy { it.fees.sat })
 
 /**
  * 1 bit =     100 cent
@@ -37,21 +40,29 @@ data class Coin constructor(
 
     operator fun compareTo(other: Number): Int = this.sat.compareTo(other.toInt())
 
-    operator fun plus(other: Coin): Coin = Coin(this.sat + other.sat)
+    operator fun plus(other: Coin): Coin =
+        Coin(this.sat + other.sat)
 
-    operator fun plus(other: Number): Coin = Coin(this.sat + other.toInt())
+    operator fun plus(other: Number): Coin =
+        Coin(this.sat + other.toInt())
 
-    operator fun minus(other: Coin): Coin = Coin(this.sat - other.sat)
+    operator fun minus(other: Coin): Coin =
+        Coin(this.sat - other.sat)
 
-    operator fun minus(other: Number): Coin = Coin(this.sat - other.toInt())
+    operator fun minus(other: Number): Coin =
+        Coin(this.sat - other.toInt())
 
-    operator fun times(other: Coin): Coin = Coin(this.sat * other.sat)
+    operator fun times(other: Coin): Coin =
+        Coin(this.sat * other.sat)
 
-    operator fun times(other: Number): Coin = Coin(this.sat * other.toInt())
+    operator fun times(other: Number): Coin =
+        Coin(this.sat * other.toInt())
 
-    operator fun div(other: Coin): Coin = Coin(this.sat / other.sat)
+    operator fun div(other: Coin): Coin =
+        Coin(this.sat / other.sat)
 
-    operator fun div(other: Number): Coin = Coin(this.sat / other.toInt())
+    operator fun div(other: Number): Coin =
+        Coin(this.sat / other.toInt())
 
     override fun toString(): String = "Coin {" + stringOf(
         " bit=$bit",

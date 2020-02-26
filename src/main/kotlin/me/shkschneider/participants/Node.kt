@@ -7,7 +7,7 @@ import me.shkschneider.consensus.validate
 
 class Node(
     private val chain: Chain,
-    private val hotWallet: HotWallet
+    hotWallet: HotWallet
 ) : HotMiner(chain, hotWallet) {
 
     fun relay(tx: Transaction) {

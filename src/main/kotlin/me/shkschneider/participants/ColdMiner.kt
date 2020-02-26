@@ -1,7 +1,7 @@
 package me.shkschneider.participants
 
 import me.shkschneider.blockchain.Block
-import me.shkschneider.crypto.difficulty
+import me.shkschneider.data.difficulty
 import kotlin.random.Random
 
 open class ColdMiner {

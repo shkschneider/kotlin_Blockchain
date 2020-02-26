@@ -3,9 +3,9 @@ package me.shkschneider.blockchain
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
-import me.shkschneider.crypto.Coin
-import me.shkschneider.crypto.Hash
-import me.shkschneider.crypto.Hashable
+import me.shkschneider.data.Coin
+import me.shkschneider.data.Data
+import me.shkschneider.data.Hash
 import me.shkschneider.stringOf
 
 data class Block(
@@ -14,7 +14,7 @@ data class Block(
     val transactions: MutableList<Transaction> = mutableListOf(),
     val difficulty: Int = Consensus.genesis.difficulty,
     var nonce: Long = 0 // proof-of-work
-) : Hashable() {
+) : Data() {
 
     val coinbase: Transaction get() = transactions.first().takeIf { it.isCoinbase } ?: throw BlockchainException("coinbase")
 
@@ -28,7 +28,7 @@ data class Block(
         return transactions.add(tx)
     }
 
-    override fun data(): String = stringOf(height, previous, transactions, nonce)
+    override fun data(): ByteArray = stringOf(height, previous, transactions, nonce).toByteArray()
 
     override fun toString(): String = "Block {" + stringOf(
         " height=$height",

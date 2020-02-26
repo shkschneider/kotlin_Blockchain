@@ -1,21 +1,20 @@
 package me.shkschneider.blockchain
 
-import me.shkschneider.crypto.Coin
-import me.shkschneider.crypto.Hashable
-import me.shkschneider.crypto.PublicKey
-import me.shkschneider.crypto.toHash
+import me.shkschneider.data.Coin
+import me.shkschneider.data.Address
+import me.shkschneider.data.Data
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.stringOf
 
 data class TransactionOutput internal constructor(
-    val to: PublicKey,
+    val to: Address,
     val amount: Coin
-) : Hashable() {
+) : Data() {
 
-    override fun data(): String = stringOf(to, amount)
+    override fun data(): ByteArray = stringOf(to, amount).toByteArray()
 
     override fun toString(): String = "TransactionOutput {" + stringOf(
-        " to=${to.toHash()}",
+        " to=$to",
         " amount=[bit=${amount.bit},sat=${amount.sat}]"
     ) + " }"
 

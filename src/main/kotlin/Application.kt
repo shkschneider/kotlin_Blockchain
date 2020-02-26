@@ -3,8 +3,8 @@ import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
-import me.shkschneider.crypto.Coin
-import me.shkschneider.crypto.toCoin
+import me.shkschneider.data.Coin
+import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.participants.HotWallet
 import me.shkschneider.participants.Node
@@ -46,7 +46,10 @@ object Application {
         chain.add(node1.mine().also { it.print() })
         val hotWallet2 = HotWallet.Factory(chain)
         val node2 = Node(chain, hotWallet2)
-        hotWallet1.send(to = hotWallet2.address(), amount = Coin(sat = 42), fees = Coin(sat = 1))
+        hotWallet1.send(to = hotWallet2.address(), amount = Coin(sat = 42), fees = Coin(
+            sat = 1
+        )
+        )
         chain.add(node2.mine().also { it.print() })
 
         println()

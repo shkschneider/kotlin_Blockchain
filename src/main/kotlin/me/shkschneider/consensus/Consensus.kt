@@ -1,10 +1,11 @@
 package me.shkschneider.consensus
 
-import me.shkschneider.crypto.Coin
 import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
+import me.shkschneider.data.Coin
 import me.shkschneider.crypto.KeyPair
+import me.shkschneider.data.Address
 
 object Consensus {
 
@@ -31,7 +32,8 @@ object Consensus {
 
     }
 
-    fun reward(height: Int): Coin = Coin(bit = 1.0 / ((height / Rules.halving) + 1))
+    fun reward(height: Int): Coin =
+        Coin(bit = 1.0 / ((height / Rules.halving) + 1))
 
     val origin: KeyPair = KeyPair.Factory("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks")
 
@@ -44,7 +46,7 @@ object Consensus {
         add(
             Transaction(
                 inputs = mutableListOf(),
-                outputs = mutableListOf(TransactionOutput(origin.public, reward(0)))
+                outputs = mutableListOf(TransactionOutput(Address(origin.public), reward(0)))
             ).apply {
                 sign(origin.private)
             }

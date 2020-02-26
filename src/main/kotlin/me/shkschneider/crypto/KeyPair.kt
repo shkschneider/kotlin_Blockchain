@@ -8,8 +8,9 @@ class KeyPair internal constructor(
     companion object {
 
         @Suppress("FunctionName")
-        fun Factory(seed: String? = null): KeyPair = with(Crypto.keyPairGenerator(seed).generateKeyPair()) {
-            KeyPair(private, public)
+        fun Factory(seed: String? = null): KeyPair {
+            val keyPair = Crypto.keyPairGenerator(seed).generateKeyPair()
+            return KeyPair(keyPair.private, keyPair.public)
         }
 
     }

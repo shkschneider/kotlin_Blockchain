@@ -4,7 +4,7 @@ import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Chain
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
-import me.shkschneider.crypto.toCoin
+import me.shkschneider.data.toCoin
 
 fun TransactionOutput.validate() {
     amount.sat > 0 || throw BlockchainException()

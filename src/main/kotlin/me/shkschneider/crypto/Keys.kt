@@ -1,28 +1,25 @@
 package me.shkschneider.crypto
 
-import me.shkschneider.fromBase64
-import me.shkschneider.toBase64
-
 // Private
 
 typealias PrivateKey = java.security.PrivateKey
 
-fun PrivateKey.sign(msg: String): String =
+fun PrivateKey.sign(msg: ByteArray): ByteArray =
     Crypto.signature().apply {
         initSign(this@sign)
-        update(msg.toByteArray())
+        update(msg)
     }.run {
-        sign().toBase64()
+        sign()
     }
 
 // Public
 
 typealias PublicKey = java.security.PublicKey
 
-fun PublicKey.verify(msg: String, sig: String): Boolean =
+fun PublicKey.verify(msg: ByteArray, signature: ByteArray): Boolean =
     Crypto.signature().apply {
         initVerify(this@verify)
-        update(msg.toByteArray())
+        update(msg)
     }.run {
-        verify(sig.fromBase64())
+        verify(signature)
     }

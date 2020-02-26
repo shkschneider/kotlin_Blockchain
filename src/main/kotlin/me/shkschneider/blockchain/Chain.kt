@@ -1,12 +1,11 @@
 package me.shkschneider.blockchain
 
 import me.shkschneider.consensus.BlockchainException
-import me.shkschneider.crypto.Coin
+import me.shkschneider.data.Coin
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
-import me.shkschneider.crypto.toCoin
+import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdMiner
-import me.shkschneider.participants.HotMiner
 import me.shkschneider.stringOf
 
 class Chain {

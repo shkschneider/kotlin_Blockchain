@@ -4,7 +4,7 @@ import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Chain
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.consensus.Consensus
-import me.shkschneider.crypto.fees
+import me.shkschneider.data.fees
 
 open class HotMiner(
     private val chain: Chain,
