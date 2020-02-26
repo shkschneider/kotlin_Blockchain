@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.Security
 import java.security.Signature
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 object Crypto {
 
@@ -26,6 +28,11 @@ object Crypto {
                 random(seed)
             )
         }
+
+    @Throws(NoSuchAlgorithmException::class)
+    internal fun hmac(key: ByteArray): Mac = Mac.getInstance(Consensus.Algorithms.hmac).apply {
+        init(SecretKeySpec(key, Consensus.Algorithms.hmac))
+    }
 
     fun algorithms(): List<String> = mutableListOf<String>().apply {
         Security.getProviders().forEach { provider ->

@@ -15,6 +15,7 @@ object Consensus {
         const val hash = "SHA1"
         val keys = ("RSA" to 2048)
         const val random = "SHA1PRNG"
+        const val hmac = "HmacSHA1"
 
     }
 
