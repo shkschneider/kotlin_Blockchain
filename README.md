@@ -5,6 +5,9 @@ Blockchain
 
 FOR EDUCATION PURPOSES ONLY.
 
+[![Actions Status](https://github.com/shkschneider/kotlin_Blockchain/workflows/Gradle/badge.svg)](https://github.com/shkschneider/kotlin_Blockchain/actions)
+
+
 Specifications
 --------------
 
