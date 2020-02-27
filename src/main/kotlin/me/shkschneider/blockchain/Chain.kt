@@ -1,9 +1,9 @@
 package me.shkschneider.blockchain
 
 import me.shkschneider.consensus.BlockchainException
-import me.shkschneider.data.Coin
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
+import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdMiner
 import me.shkschneider.stringOf
@@ -49,8 +49,8 @@ class Chain {
     fun add(tx: Transaction) {
         tx.validate()
         if (tx.inputs.any { txo ->
-            blocks.flatMap { it.inputs }.contains(txo)
-        }) throw BlockchainException("double-spend")
+                blocks.flatMap { it.inputs }.contains(txo)
+            }) throw BlockchainException("double-spend")
         if (!mempool.add(tx)) throw BlockchainException("mempool")
     }
 

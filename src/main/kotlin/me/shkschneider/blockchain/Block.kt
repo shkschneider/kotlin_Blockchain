@@ -7,6 +7,7 @@ import me.shkschneider.data.Coin
 import me.shkschneider.data.Data
 import me.shkschneider.data.Hash
 import me.shkschneider.data.toBase64
+import me.shkschneider.data.toHash
 import me.shkschneider.stringOf
 
 data class Block(
@@ -16,6 +17,8 @@ data class Block(
     val difficulty: Int = Consensus.genesis.difficulty,
     var nonce: Long = 0 // proof-of-work
 ) : Data() {
+
+    val hash: Hash get() = data.toHash()
 
     val coinbase: Transaction get() = transactions.first().takeIf { it.isCoinbase } ?: throw BlockchainException("coinbase")
 

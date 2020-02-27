@@ -3,9 +3,9 @@ import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
+import me.shkschneider.consensus.validate
 import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
-import me.shkschneider.consensus.validate
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.participants.HotWallet
 import me.shkschneider.participants.Node

@@ -17,11 +17,11 @@ object Crypto {
         }
 
     @Throws(NoSuchAlgorithmException::class)
-    internal fun signature(): Signature =
+    fun signature(): Signature =
         Signature.getInstance(Consensus.Algorithms.signature)
 
     @Throws(NoSuchAlgorithmException::class)
-    internal fun keyPairGenerator(seed: String? = null): KeyPairGenerator =
+    fun keyPairGenerator(seed: String? = null): KeyPairGenerator =
         KeyPairGenerator.getInstance(Consensus.Algorithms.keys.first).apply {
             initialize(
                 Consensus.Algorithms.keys.second,
@@ -30,7 +30,7 @@ object Crypto {
         }
 
     @Throws(NoSuchAlgorithmException::class)
-    internal fun hmac(key: ByteArray): Mac =
+    fun hmac(key: ByteArray): Mac =
         Mac.getInstance(Consensus.Algorithms.hmac).apply {
             init(SecretKeySpec(key, Consensus.Algorithms.hmac))
         }

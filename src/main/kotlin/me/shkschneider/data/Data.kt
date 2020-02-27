@@ -1,12 +1,6 @@
 package me.shkschneider.data
 
-import me.shkschneider.timestamp
-
-abstract class Data {
-
-    val time: Long = timestamp
-
-    val hash: Hash get() = data.toHash()
+abstract class Data(val time: Timestamp = timestamp) {
 
     val data: ByteArray get() = data()
 

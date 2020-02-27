@@ -13,7 +13,7 @@ import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.stringOf
 
-data class Transaction internal constructor(
+data class Transaction(
     var inputs: MutableList<TransactionOutput> = mutableListOf(),
     var outputs: MutableList<TransactionOutput> = mutableListOf(),
     var signature: Base64? = null

@@ -14,7 +14,7 @@ import me.shkschneider.data.toHex
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.stringOf
 
-data class TransactionOutput internal constructor(
+data class TransactionOutput(
     val to: Address,
     val amount: Coin
 ) : Data() {

@@ -1,6 +1,6 @@
 package me.shkschneider.crypto
 
-class KeyPair internal constructor(
+class KeyPair private constructor(
     val private: PrivateKey,
     val public: PublicKey
 ) {
