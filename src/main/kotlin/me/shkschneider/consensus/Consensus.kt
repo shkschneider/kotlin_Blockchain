@@ -2,10 +2,9 @@ package me.shkschneider.consensus
 
 import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Transaction
-import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.data.Coin
 import me.shkschneider.crypto.KeyPair
-import me.shkschneider.data.Address
+import me.shkschneider.participants.ColdWallet
 
 object Consensus {
 
@@ -20,6 +19,7 @@ object Consensus {
     }
 
     private val versions = listOf(
+        "0.1.2" to "48dc804af4a64a0fb46349beef10e94f4fef6a08",
         "0.1.1" to "a73777f588f6e474db8b32b1c13fd9f5f318c807",
         "0.1.0" to "fe753b23556364128df95d2ef135d87743e9d4a7"
     )
@@ -45,12 +45,10 @@ object Consensus {
         nonce = 0
     ).apply {
         add(
-            Transaction(
-                inputs = mutableListOf(),
-                outputs = mutableListOf(TransactionOutput(Address(origin.public), reward(0)))
-            ).apply {
-                sign(origin.private)
-            }
+            Transaction.coinbase(
+                reward(0),
+                ColdWallet(origin.private, origin.public)
+            )
         )
     }
 

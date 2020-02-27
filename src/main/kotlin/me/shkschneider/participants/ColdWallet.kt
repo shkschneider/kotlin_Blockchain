@@ -19,7 +19,9 @@ open class ColdWallet(
     private val public: PublicKey
 ) {
 
-    fun sign(tx: Transaction): Transaction = tx.apply { sign(private) }
+    fun sign(tx: Transaction) = with(tx) {
+        sign(private)
+    }
 
     fun sign(msg: String): Base64 = private.sign(msg.toByteArray()).toBase64()
 
@@ -35,7 +37,10 @@ open class ColdWallet(
             if (change > 0) {
                 outputs.add(TransactionOutput(address(), change))
             }
-        }.apply { sign(private) }
+        }.apply {
+            unlock(private)
+            sign(private)
+        }
     }
 
     override fun toString(): String = "ColdWallet {" + stringOf(

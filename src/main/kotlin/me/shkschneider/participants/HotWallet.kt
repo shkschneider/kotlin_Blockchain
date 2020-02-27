@@ -1,23 +1,21 @@
 package me.shkschneider.participants
 
-import me.shkschneider.data.Coin
-import me.shkschneider.blockchain.Block
-import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.blockchain.Chain
+import me.shkschneider.blockchain.TransactionOutput
+import me.shkschneider.consensus.BlockchainException
+import me.shkschneider.consensus.validate
+import me.shkschneider.crypto.KeyPair
 import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.PublicKey
-import me.shkschneider.blockchain.TransactionOutput
-import me.shkschneider.consensus.validate
-import me.shkschneider.blockchain.Transaction
 import me.shkschneider.data.Address
-import me.shkschneider.crypto.KeyPair
+import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
 import me.shkschneider.stringOf
 
 class HotWallet(
     private val chain: Chain,
     private: PrivateKey,
-    private val public: PublicKey
+    public: PublicKey
 ) : ColdWallet(private, public) {
 
     companion object {
@@ -28,9 +26,6 @@ class HotWallet(
         }
 
     }
-
-    private val mempool: List<Transaction> get() = chain.mempool
-    private val utxos: List<TransactionOutput> get() = chain.utxos.toMutableList()
 
     fun balance(): Coin =
         chain.utxos.filter { it.to == address() }.toCoin()
@@ -48,20 +43,8 @@ class HotWallet(
             }
         }
         val tx = outgoing(inputs, to, amount, fees)
-        send(tx)
-    }
-
-    fun send(tx: Transaction) {
-        if (!tx.isSigned) {
-            sign(tx)
-        }
         tx.validate()
         chain.add(tx)
-    }
-
-    fun send(blk: Block) {
-        blk.validate()
-        chain.add(blk)
     }
 
     override fun toString(): String = "HotWallet {" + stringOf(

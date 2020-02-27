@@ -30,9 +30,10 @@ object Crypto {
         }
 
     @Throws(NoSuchAlgorithmException::class)
-    internal fun hmac(key: ByteArray): Mac = Mac.getInstance(Consensus.Algorithms.hmac).apply {
-        init(SecretKeySpec(key, Consensus.Algorithms.hmac))
-    }
+    internal fun hmac(key: ByteArray): Mac =
+        Mac.getInstance(Consensus.Algorithms.hmac).apply {
+            init(SecretKeySpec(key, Consensus.Algorithms.hmac))
+        }
 
     fun algorithms(): List<String> = mutableListOf<String>().apply {
         Security.getProviders().forEach { provider ->

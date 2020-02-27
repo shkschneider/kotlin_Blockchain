@@ -17,9 +17,8 @@ class Chain {
     var difficulty: Int = 1 // hard-coded
 
     init {
-        println("version=${Consensus.version}")
+        println("v${Consensus.version.first} (${Consensus.version.second})")
         Consensus.genesis.copy(nonce = ColdMiner().mine(Consensus.genesis)).let { genesis ->
-            println("block[${genesis.height}]=${genesis.hash}")
             genesis.validate()
             add(genesis)
         }
@@ -35,6 +34,17 @@ class Chain {
             }
 
     val amount: Coin get() = utxos.toCoin()
+
+    fun estimatedSupply(): Coin {
+        var height = 0
+        var coins = Consensus.reward(height)
+        while (true) {
+            val reward = Consensus.reward(++height)
+            if (reward.sat <= 1) break
+            coins += reward
+        }
+        return coins
+    }
 
     fun add(tx: Transaction) {
         tx.validate()

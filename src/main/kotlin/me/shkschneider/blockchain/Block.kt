@@ -6,6 +6,7 @@ import me.shkschneider.consensus.validate
 import me.shkschneider.data.Coin
 import me.shkschneider.data.Data
 import me.shkschneider.data.Hash
+import me.shkschneider.data.toBase64
 import me.shkschneider.stringOf
 
 data class Block(
@@ -28,12 +29,19 @@ data class Block(
         return transactions.add(tx)
     }
 
-    override fun data(): ByteArray = stringOf(height, previous, transactions, nonce).toByteArray()
+    override fun data(): ByteArray = stringOf(
+        time,
+        height,
+        previous,
+        transactions.map { it.data.toBase64() },
+        nonce
+    ).toByteArray()
 
     override fun toString(): String = "Block {" + stringOf(
+        " time=$time",
         " height=$height",
         " hash=$hash",
-        " previous=${previous.orEmpty()}",
+        " previous=$previous",
         " height=$height",
         " transactions=${transactions.size}",
         " difficulty=$difficulty",
