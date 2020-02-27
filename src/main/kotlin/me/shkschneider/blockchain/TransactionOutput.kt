@@ -4,9 +4,9 @@ import me.shkschneider.crypto.Hmac
 import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.sign
 import me.shkschneider.data.Address
-import me.shkschneider.data.Base64
 import me.shkschneider.data.Coin
 import me.shkschneider.data.Data
+import me.shkschneider.data.Hex
 import me.shkschneider.data.fromHex
 import me.shkschneider.data.toBase64
 import me.shkschneider.data.toHex
@@ -18,8 +18,8 @@ data class TransactionOutput(
     val amount: Coin
 ) : Data() {
 
-    val lockScript: Base64 = Hmac.sign(to.publicKey.encoded, data).toHex()
-    var unlockScript: Base64? = null
+    val lockScript: Hex = Hmac.sign(to.publicKey.encoded, data).toHex()
+    var unlockScript: Hex? = null
 
     val isClaimed: Boolean get() = unlockScript != null
 
