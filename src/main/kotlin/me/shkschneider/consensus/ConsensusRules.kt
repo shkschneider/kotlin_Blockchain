@@ -68,7 +68,7 @@ fun Chain.validate() {
         // ALL tx should be valid
         tx.validate()
     }
-    genesis.height == 0 || throw BlockchainException.ChainException("genesis height")
+    blocks.getOrNull(0)?.height == 0 || throw BlockchainException.ChainException("genesis height")
     blocks.forEachIndexed { i, blk ->
         // ALL blocks should be in ascending height (by 1)
         blk.height == blocks.getOrNull(i - 1)?.height?.plus(1) ?: 0

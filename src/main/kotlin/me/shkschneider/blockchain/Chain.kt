@@ -6,7 +6,6 @@ import me.shkschneider.consensus.validate
 import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdMiner
-import me.shkschneider.print
 import me.shkschneider.stringOf
 
 class Chain {
@@ -18,23 +17,17 @@ class Chain {
     var difficulty: Int = 1 // hard-coded
 
     init {
-        println("v${Consensus.version.first} (${Consensus.version.second})")
-        Consensus.genesis.copy(nonce = ColdMiner().mine(Consensus.genesis)).let { genesis ->
-            genesis.validate()
-            add(genesis)
+        with(Consensus.genesis) {
+            this.copy(nonce = ColdMiner().mine(this)).run {
+                validate()
+                add(this)
+            }
         }
         validate()
     }
 
-    val genesis: Block get() = blocks.first().takeIf { it.height == 0 } ?: throw BlockchainException.ChainException("genesis")
-
     val utxos: List<TransactionOutput>
-        get() =
-            // each output
-            blocks.flatMap { it.outputs }.filterNot { txo ->
-                // that is not spent as an input
-                blocks.flatMap { it.inputs }.any { it == txo }
-            }
+        get() = blocks.flatMap { it.outputs }.filter { !it.isClaimed }
 
     val amount: Coin get() = utxos.toCoin()
 

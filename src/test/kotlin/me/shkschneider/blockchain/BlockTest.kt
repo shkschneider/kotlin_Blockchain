@@ -6,12 +6,12 @@ import me.shkschneider.consensus.validate
 import me.shkschneider.participants.ColdMiner
 import org.junit.Test
 
-internal fun blk(genesis: Boolean) =
-    if (genesis) {
+internal fun blk(height: Int) =
+    if (height == 0) {
         Consensus.genesis
     } else {
         Block(
-            height = 1,
+            height = height,
             previous = Consensus.genesis.hash,
             transactions = mutableListOf(
                 tx(
@@ -30,29 +30,29 @@ class BlockTest {
 
     @Test
     fun `validate (height=0)`() {
-        blk(genesis = true).mine().validate()
+        blk(height = 0).mine().validate()
     }
 
     @Test
     fun `validate (height=1)`() {
-        blk(genesis = false).mine().validate()
+        blk(height = 1).mine().validate()
     }
 
     @Test(expected = BlockchainException.BlockException::class)
     fun `block not mined`() {
-        blk(genesis = true).validate()
+        blk(height = 0).validate()
     }
 
     @Test(expected = BlockchainException.BlockException::class)
     fun `block badly mined`() {
-        blk(genesis = false)
+        blk(height = 1)
             .copy(difficulty = 100, nonce = 1)
             .validate()
     }
 
     @Test(expected = BlockchainException.BlockException::class)
     fun `block is orphan`() {
-        blk(genesis = false)
+        blk(height = 1)
             .copy(previous = null)
             .mine()
             .validate()
@@ -60,7 +60,7 @@ class BlockTest {
 
     @Test(expected = BlockchainException.BlockException::class)
     fun `block has no coinbase tx`() {
-        blk(genesis = false)
+        blk(height = 1)
             .copy(transactions = mutableListOf())
             .mine()
             .validate()
@@ -68,7 +68,7 @@ class BlockTest {
 
     @Test(expected = BlockchainException.BlockException::class)
     fun `block has bad reward`() {
-        blk(genesis = false)
+        blk(height = 1)
             .copy(transactions = mutableListOf(
                 tx(coinbase = true, signed = true, claimed = false).apply {
                     outputs = mutableListOf(outputs.first().copy(amount = Consensus.reward(0) * 2))
@@ -80,7 +80,7 @@ class BlockTest {
 
     @Test(expected = BlockchainException.BlockException::class)
     fun `block is too big`() {
-        blk(genesis = false).apply {
+        blk(height = 1).apply {
             for (i in 1 until Consensus.Rules.blockSize + 1) {
                 transactions.add(
                     tx(
