@@ -68,18 +68,6 @@ class BlockTest {
     }
 
     @Test(expected = BlockchainException.BlockException::class)
-    fun `block has bad reward`() {
-        blk(height = 1)
-            .copy(transactions = mutableListOf(
-                tx(coinbase = true, signed = true, claimed = false).apply {
-                    outputs = mutableListOf(outputs.first().copy(amount = Consensus.reward(0) * 2))
-                }
-            ))
-            .mine()
-            .validate()
-    }
-
-    @Test(expected = BlockchainException.BlockException::class)
     fun `block is too big`() {
         blk(height = 1).apply {
             for (i in 1 until Consensus.Rules.blockSize + 1) {
@@ -89,10 +77,22 @@ class BlockTest {
                         signed = true,
                         claimed = true
                     ).apply {
-                    outputs.add(txo(claimed = false))
-                })
+                        outputs.add(txo(claimed = false))
+                    })
             }
         }.mine().validate()
+    }
+
+    @Test(expected = BlockchainException.BlockException::class)
+    fun `block has bad reward`() {
+        blk(height = 1)
+            .copy(transactions = mutableListOf(
+                tx(coinbase = true, signed = true, claimed = false).apply {
+                    outputs = mutableListOf(outputs.first().copy(amount = Consensus.reward(0) * 2))
+                }
+            ))
+            .mine()
+            .validate()
     }
 
 }

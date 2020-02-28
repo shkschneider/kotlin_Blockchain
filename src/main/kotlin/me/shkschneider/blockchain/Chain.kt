@@ -50,10 +50,10 @@ class Chain {
         if (!mempool.add(tx)) throw BlockchainException.ChainException("mempool")
     }
 
-    fun add(block: Block) {
-        block.validate()
-        mempool.removeAll(block.transactions)
-        if (!blocks.add(block)) throw BlockchainException.ChainException("block")
+    fun add(blk: Block) {
+        blk.validate()
+        mempool.removeAll(blk.transactions)
+        if (!blocks.add(blk)) throw BlockchainException.ChainException("block")
     }
 
     override fun toString(): String = "Chain {" + stringOf(

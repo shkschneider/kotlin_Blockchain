@@ -52,11 +52,11 @@ fun Block.validate() {
     }
     // ALL block should have a single coinbase tx
     transactions.count { it.isCoinbase } == 1 || throw BlockchainException.BlockException("coinbases")
-    // ALL block should have a valid coinbase tx
-    coinbase.isCoinbase || throw BlockchainException.BlockException("coinbase")
-    coinbase.amount == Consensus.reward(height) || throw BlockchainException.BlockException("reward")
     // ALL block should respect blockSize
     size <= Consensus.Rules.blockSize || throw BlockchainException.BlockException("size")
+    // ALL block should have a valid coinbase tx
+    coinbase.isCoinbase || throw BlockchainException.BlockException("coinbase")
+    coinbase.amount == Consensus.reward(height) + fees || throw BlockchainException.BlockException("reward")
     // ALL tx should be valid
     transactions.forEach { it.validate() }
 }
