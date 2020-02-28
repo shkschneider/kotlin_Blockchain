@@ -9,12 +9,12 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal fun tx(coinbase: Boolean, signed: Boolean, claimed: Boolean) = Transaction(
+internal fun tx(coinbase: Boolean, signed: Boolean, claimed: Boolean, amount: Coin = Consensus.reward(0)) = Transaction(
     inputs = mutableListOf(),
-    outputs = mutableListOf(txo(claimed = false))
+    outputs = mutableListOf(txo(claimed = false, amount = amount))
 ).apply {
     if (coinbase && claimed) throw BlockchainException.TransactionException("coinbase claimed")
-    if (!coinbase) inputs.add(txo(claimed = claimed))
+    if (!coinbase) inputs.add(txo(claimed = claimed, amount = amount))
     if (signed) sign(Consensus.origin.private)
 }
 

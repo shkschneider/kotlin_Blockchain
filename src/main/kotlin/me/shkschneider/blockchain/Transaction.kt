@@ -32,7 +32,7 @@ data class Transaction(
     }
 
     fun sign(privateKey: PrivateKey) {
-        if (inputs.any { !it.isClaimed }) throw BlockchainException.TransactionException("inputs isClaimed")
+        if (inputs.any { !it.isClaimed }) throw BlockchainException.TransactionException("inputs !isClaimed")
         signature = privateKey.sign(data).toBase64()
     }
 

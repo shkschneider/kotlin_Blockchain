@@ -17,7 +17,8 @@ internal fun blk(height: Int) =
                 tx(
                     coinbase = true,
                     signed = true,
-                    claimed = false
+                    claimed = false,
+                    amount = Consensus.reward(height)
                 )
             ),
             difficulty = Consensus.genesis.difficulty
