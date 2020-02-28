@@ -1,5 +1,6 @@
 package me.shkschneider.blockchain
 
+import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.PublicKey
 import me.shkschneider.crypto.sign
@@ -31,11 +32,12 @@ data class Transaction(
     }
 
     fun sign(privateKey: PrivateKey) {
+        if (inputs.any { !it.isClaimed }) throw BlockchainException.TransactionException("inputs isClaimed")
         signature = privateKey.sign(data).toBase64()
     }
 
-    fun verify(publicKey: PublicKey): Boolean =
-        publicKey.verify(data, signature.orEmpty().fromBase64())
+    fun verify(): Boolean =
+        signature?.let { inputs.first().to.publicKey.verify(data, it.fromBase64()) } ?: false
 
     override fun data(): ByteArray = stringOf(
         time,
@@ -58,9 +60,7 @@ data class Transaction(
             Transaction(
                 inputs = mutableListOf(),
                 outputs = mutableListOf(TransactionOutput.coinbase(reward, coldWallet))
-            ).apply {
-                coldWallet.sign(this)
-            }
+            )
 
     }
 

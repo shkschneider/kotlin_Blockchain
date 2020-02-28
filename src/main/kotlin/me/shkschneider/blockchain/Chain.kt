@@ -6,6 +6,7 @@ import me.shkschneider.consensus.validate
 import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdMiner
+import me.shkschneider.print
 import me.shkschneider.stringOf
 
 class Chain {
@@ -24,6 +25,8 @@ class Chain {
         }
         validate()
     }
+
+    val genesis: Block get() = blocks.first().takeIf { it.height == 0 } ?: throw BlockchainException.ChainException("genesis")
 
     val utxos: List<TransactionOutput>
         get() =
@@ -50,14 +53,14 @@ class Chain {
         tx.validate()
         if (tx.inputs.any { txo ->
                 blocks.flatMap { it.inputs }.contains(txo)
-            }) throw BlockchainException("double-spend")
-        if (!mempool.add(tx)) throw BlockchainException("mempool")
+            }) throw BlockchainException.ChainException("double-spend")
+        if (!mempool.add(tx)) throw BlockchainException.ChainException("mempool")
     }
 
     fun add(block: Block) {
         block.validate()
         mempool.removeAll(block.transactions)
-        if (!blocks.add(block)) throw BlockchainException("block")
+        if (!blocks.add(block)) throw BlockchainException.ChainException("block")
     }
 
     override fun toString(): String = "Chain {" + stringOf(

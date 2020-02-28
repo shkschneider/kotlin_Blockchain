@@ -2,22 +2,26 @@ package me.shkschneider.participants
 
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
-import me.shkschneider.data.Coin
 import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.PublicKey
 import me.shkschneider.crypto.sign
-import me.shkschneider.data.toCoin
 import me.shkschneider.crypto.verify
 import me.shkschneider.data.Address
 import me.shkschneider.data.Base64
+import me.shkschneider.data.Coin
 import me.shkschneider.data.fromBase64
 import me.shkschneider.data.toBase64
+import me.shkschneider.data.toCoin
 import me.shkschneider.stringOf
 
 open class ColdWallet(
-    private val private: PrivateKey,
+    protected val private: PrivateKey,
     private val public: PublicKey
 ) {
+
+    fun unlock(tx: Transaction) = with(tx) {
+        unlock(private)
+    }
 
     fun sign(tx: Transaction) = with(tx) {
         sign(private)

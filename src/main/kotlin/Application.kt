@@ -18,14 +18,13 @@ object Application {
         val chain = Chain()
         println(chain.estimatedSupply())
         println(chain)
-        println()
         val coldWallet = ColdWallet(Consensus.origin.private, Consensus.origin.public)
         println(coldWallet)
         val hotWallet1 = HotWallet.Factory(chain)
         println(hotWallet1)
 
         val tx = Transaction(
-            inputs = Consensus.genesis.outputs.toMutableList(),
+            inputs = mutableListOf(chain.blocks.flatMap { it.outputs }.first()),
             outputs = mutableListOf(TransactionOutput.coinbase(Consensus.reward(chain.height), hotWallet1))
         ).apply {
             unlock(Consensus.origin.private)
@@ -52,8 +51,10 @@ object Application {
             println()
             chain.utxos.forEach { it.print() }
         }
-        hotWallet1.balance() == (chain.blocks[0].outputs.toCoin() + Consensus.reward(1) - 42 - 1) || throw BlockchainException()
-        hotWallet2.balance() == (Consensus.reward(2) + 42 + 1) || throw BlockchainException()
+        hotWallet1.balance() == (chain.blocks[0].outputs.toCoin() + Consensus.reward(1) - 42 - 1) || throw BlockchainException.WalletException(
+            "balance"
+        )
+        hotWallet2.balance() == (Consensus.reward(2) + 42 + 1) || throw BlockchainException.WalletException("balance")
         chain.validate()
     }
 

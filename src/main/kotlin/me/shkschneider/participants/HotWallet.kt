@@ -1,6 +1,7 @@
 package me.shkschneider.participants
 
 import me.shkschneider.blockchain.Chain
+import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.validate
@@ -31,7 +32,7 @@ class HotWallet(
         chain.utxos.filter { it.to == address() }.toCoin()
 
     fun send(to: Address, amount: Coin, fees: Coin = Coin(sat = 1)) {
-        if (balance() < amount + fees) throw BlockchainException("balance")
+        if (balance() < amount + fees) throw BlockchainException.WalletException("balance")
         val inputs = mutableListOf<TransactionOutput>()
         chain.utxos.filter { it.to == address() }.sortedBy { it.amount }.forEach { utxo ->
             inputs += utxo

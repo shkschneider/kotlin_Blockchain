@@ -44,11 +44,12 @@ object Consensus {
         difficulty = 1, // hard-coded
         nonce = 0
     ).apply {
+        val coldWallet = ColdWallet(origin.private, origin.public)
         add(
             Transaction.coinbase(
                 reward(0),
-                ColdWallet(origin.private, origin.public)
-            )
+                coldWallet
+            ).also { coldWallet.sign(it) }
         )
     }
 

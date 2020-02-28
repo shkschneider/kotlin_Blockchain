@@ -1,13 +1,13 @@
 package me.shkschneider.blockchain
 
-import me.shkschneider.data.Coin
 import me.shkschneider.crypto.Hmac
 import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.sign
 import me.shkschneider.crypto.verify
 import me.shkschneider.data.Address
+import me.shkschneider.data.Base64
+import me.shkschneider.data.Coin
 import me.shkschneider.data.Data
-import me.shkschneider.data.Hex
 import me.shkschneider.data.fromHex
 import me.shkschneider.data.toBase64
 import me.shkschneider.data.toHex
@@ -19,18 +19,18 @@ data class TransactionOutput(
     val amount: Coin
 ) : Data() {
 
-    private val lockScript: Hex = Hmac.sign(to.publicKey.encoded, data).toHex()
-    var unlockScript: Hex? = null
+    private val lockScript: Base64 = Hmac.sign(to.publicKey.encoded, data).toHex()
+    var unlockScript: Base64? = null
 
-    val isClaimed: Boolean get() = unlockScript != null && verify()
+    val isClaimed: Boolean get() = unlockScript != null
 
     fun unlock(privateKey: PrivateKey) {
-        unlockScript = privateKey.sign(data + lockScript.fromHex()).toHex()
+        unlockScript = privateKey.sign(lockScript.fromHex()).toHex()
     }
 
     fun verify(): Boolean {
         unlockScript?.let {
-            if (!to.publicKey.verify(data + lockScript.fromHex(), it.fromHex())) return false
+            if (!to.publicKey.verify(lockScript.fromHex(), it.fromHex())) return false
         }
         return true
     }
