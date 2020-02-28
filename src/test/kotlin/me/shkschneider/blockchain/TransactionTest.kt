@@ -1,6 +1,5 @@
-package me.shkschneider
+package me.shkschneider.blockchain
 
-import me.shkschneider.blockchain.Transaction
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
@@ -22,28 +21,26 @@ internal fun tx(coinbase: Boolean, signed: Boolean, claimed: Boolean) = Transact
 class TransactionTest {
 
     @Test
-    fun `validate coinbase`() {
+    fun `validate (coinbase)`() {
         tx(coinbase = true, signed = true, claimed = false).apply {
             sign(Consensus.origin.private)
         }.validate()
     }
 
     @Test
-    fun `validate non-coinbase`() {
+    fun `validate (non-coinbase)`() {
         tx(coinbase = false, signed = true, claimed = true).apply {
             sign(Consensus.origin.private)
         }.validate()
     }
 
-    // ALL tx should be signed
-
     @Test(expected = BlockchainException.TransactionException::class)
-    fun `invalid signature _ not signed`() {
+    fun `tx is not signed`() {
         tx(coinbase = false, signed = false, claimed = true).validate()
     }
 
     @Test(expected = BlockchainException.TransactionException::class)
-    fun `invalid signature _ wrong privateKey`() {
+    fun `tx was signed with wrong key`() {
         tx(coinbase = false, signed = false, claimed = true).apply {
             sign(KeyPair.Factory().private)
         }.validate()
@@ -58,12 +55,16 @@ class TransactionTest {
             assertTrue { inputs.size > 0 }
         }
     }
-    // ALL tx with fees should have more inputs than outputs
 
     @Test(expected = BlockchainException.TransactionException::class)
-    fun `invalid amount`() {
+    fun `more outputs thant inputs`() {
         Transaction(
-            inputs = mutableListOf(txo(claimed = true, amount = Coin(bit = 1.0))),
+            inputs = mutableListOf(
+                txo(
+                    claimed = true,
+                    amount = Coin(bit = 1.0)
+                )
+            ),
             outputs = mutableListOf(
                 txo(claimed = false, amount = Coin(bit = 1.0)),
                 txo(claimed = false, amount = Coin(bit = 1.0))
@@ -75,24 +76,40 @@ class TransactionTest {
 
     @Test
     fun `zero fees by default`() {
-        assertEquals(0, tx(coinbase = true, signed = true, claimed = false).fees.sat)
-        assertEquals(0, tx(coinbase = false, signed = true, claimed = true).fees.sat)
+        assertEquals(0, tx(
+            coinbase = true,
+            signed = true,
+            claimed = false
+        ).fees.sat)
+        assertEquals(0, tx(
+            coinbase = false,
+            signed = true,
+            claimed = true
+        ).fees.sat)
     }
 
     @Test(expected = BlockchainException.TransactionException::class)
-    fun `invalid fees`() {
+    fun `not enough inputs for outputs (negative fees)`() {
         Transaction(
-            inputs = mutableListOf(txo(claimed = true, amount = Coin(bit = 0.9))),
-            outputs = mutableListOf(txo(claimed = false, amount = Coin(bit = 1.0)))
+            inputs = mutableListOf(
+                txo(
+                    claimed = true,
+                    amount = Coin(bit = 0.9)
+                )
+            ),
+            outputs = mutableListOf(
+                txo(
+                    claimed = false,
+                    amount = Coin(bit = 1.0)
+                )
+            )
         ).apply {
             sign(Consensus.origin.private)
         }.validate()
     }
 
-    // ALL tx inputs should be claimed
-
     @Test(expected = BlockchainException.TransactionException::class)
-    fun `invalid inputs _ claimed`() {
+    fun `inputs are not all claimed`() {
         tx(coinbase = false, signed = true, claimed = false).validate()
     }
 

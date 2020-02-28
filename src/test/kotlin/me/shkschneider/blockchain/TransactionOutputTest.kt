@@ -1,6 +1,5 @@
-package me.shkschneider
+package me.shkschneider.blockchain
 
-import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
@@ -37,14 +36,10 @@ class TransactionOutputTest {
         txo(claimed = false).validate()
     }
 
-    // ALL txo should have positive amount
-
     @Test(expected = BlockchainException.TransactionOutputException::class)
-    fun `invalid amount`() {
+    fun `negative amount`() {
         txo(claimed = false, amount = Coin(-1)).validate()
     }
-
-    // ALL claimed txo should have unlockScript matching lockScript
 
     @Test
     fun `valid unlockScript`() {

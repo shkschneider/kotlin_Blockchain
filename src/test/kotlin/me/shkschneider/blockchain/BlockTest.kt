@@ -1,6 +1,5 @@
-package me.shkschneider
+package me.shkschneider.blockchain
 
-import me.shkschneider.blockchain.Block
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
@@ -14,7 +13,13 @@ internal fun blk(genesis: Boolean) =
         Block(
             height = 1,
             previous = Consensus.genesis.hash,
-            transactions = mutableListOf(tx(coinbase = true, signed = true, claimed = false)),
+            transactions = mutableListOf(
+                tx(
+                    coinbase = true,
+                    signed = true,
+                    claimed = false
+                )
+            ),
             difficulty = Consensus.genesis.difficulty
         )
     }
@@ -41,7 +46,7 @@ class BlockTest {
     @Test(expected = BlockchainException.BlockException::class)
     fun `block badly mined`() {
         blk(genesis = false)
-            .copy(nonce = 42)
+            .copy(difficulty = 100, nonce = 1)
             .validate()
     }
 
@@ -77,7 +82,12 @@ class BlockTest {
     fun `block is too big`() {
         blk(genesis = false).apply {
             for (i in 1 until Consensus.Rules.blockSize + 1) {
-                transactions.add(tx(coinbase = false, signed = true, claimed = true).apply {
+                transactions.add(
+                    tx(
+                        coinbase = false,
+                        signed = true,
+                        claimed = true
+                    ).apply {
                     outputs.add(txo(claimed = false))
                 })
             }
