@@ -10,7 +10,7 @@ FOR EDUCATION PURPOSES ONLY.
 Specifications
 --------------
 
-- Kotlin 1.3+ / Java 8 / Gradle 5+
+- Kotlin 1.3+ / Java 8 / Gradle 6+
 - Supply: 117 bits / 11 700 000 sat
 - Block time: unrestricted
 - Block size: 10 transactions
