@@ -13,8 +13,8 @@ import me.shkschneider.data.toCoin
 fun TransactionOutput.validate() {
     if (isClaimed) {
         // ALL claimed txo should have unlockScript matching lockScript
-        to.publicKey.verify(lockScript.fromHex(), requireNotNull(unlockScript).fromHex()) == true
-                || throw BlockchainException.TransactionOutputException("unlockScript")
+        to.publicKey.verify(lockScript.fromHex(), requireNotNull(unlockScript).fromHex()) == true ||
+            throw BlockchainException.TransactionOutputException("unlockScript")
     }
     // ALL txo should have positive amount
     amount > 0 || throw BlockchainException.TransactionOutputException("amount")
@@ -25,11 +25,11 @@ fun Transaction.validate() {
     isSigned || throw BlockchainException.TransactionException("isSigned")
     if (!isCoinbase) {
         // ALL tx with fees should have more inputs than outputs
-        inputs.toCoin() == outputs.toCoin() + fees
-                || throw BlockchainException.TransactionException("inputs/outputs/fees")
+        inputs.toCoin() == outputs.toCoin() + fees ||
+            throw BlockchainException.TransactionException("inputs/outputs/fees")
         // ALL tx should be signed
-        inputs.first().to.publicKey.verify(data, requireNotNull(signature).fromBase64()) == true
-                || throw BlockchainException.TransactionException("signature")
+        inputs.first().to.publicKey.verify(data, requireNotNull(signature).fromBase64()) == true ||
+            throw BlockchainException.TransactionException("signature")
     }
     // ALL tx inputs should be claimed
     inputs.all { it.isClaimed } || throw BlockchainException.TransactionException("inputs isClaimed")
@@ -71,17 +71,17 @@ fun Chain.validate() {
     blocks.getOrNull(0)?.height == 0 || throw BlockchainException.ChainException("genesis height")
     blocks.forEachIndexed { i, blk ->
         // ALL blocks should be in ascending height (by 1)
-        blk.height == blocks.getOrNull(i - 1)?.height?.plus(1) ?: 0
-                || throw BlockchainException.ChainException("blocks height")
+        blk.height == blocks.getOrNull(i - 1)?.height?.plus(1) ?: 0 ||
+            throw BlockchainException.ChainException("blocks height")
         // ALL blocks should reference the previous' hash
-        blk.previous == blocks.getOrNull(i - 1)?.hash
-                || throw BlockchainException.ChainException("blocks previous")
+        blk.previous == blocks.getOrNull(i - 1)?.hash ||
+            throw BlockchainException.ChainException("blocks previous")
         // ALL blocks should be valid
         blk.validate()
     }
     // ALL unspent txo from blocks should be in utxos
-    blocks.flatMap { it.outputs }.filter { it.unlockScript == null }.size == utxos.size
-            || throw BlockchainException.ChainException("blocks unlockScripts!=utxos.size")
+    blocks.flatMap { it.outputs }.filter { it.unlockScript == null }.size == utxos.size ||
+        throw BlockchainException.ChainException("blocks unlockScripts!=utxos.size")
     utxos.forEach { txo ->
         // NONE txo should have been spent as input in a block
         blocks.flatMap { it.inputs }.contains(txo) && throw BlockchainException.ChainException("utxos blocks")

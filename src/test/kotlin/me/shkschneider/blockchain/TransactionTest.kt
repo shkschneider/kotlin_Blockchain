@@ -113,5 +113,4 @@ class TransactionTest {
         tx(coinbase = false, signed = true, claimed = false).validate()
     }
 
-
 }

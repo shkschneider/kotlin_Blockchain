@@ -1,7 +1,6 @@
 package me.shkschneider.participants
 
 import me.shkschneider.blockchain.Chain
-import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.validate

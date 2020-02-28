@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.3.61"
     application
+    id("org.jmailen.kotlinter") version "2.3.1"
 }
 
 repositories {
@@ -26,4 +27,13 @@ tasks {
 
 application {
     mainClassName = "Application"
+}
+
+kotlinter {
+    ignoreFailures = false
+    indentSize = 4
+    continuationIndentSize = 4
+    reporters = arrayOf("checkstyle", "plain")
+    experimentalRules = false
+    disabledRules = arrayOf("no-blank-line-before-rbrace", "import-ordering")
 }
