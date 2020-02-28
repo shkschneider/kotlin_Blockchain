@@ -40,22 +40,23 @@ fun Transaction.validate() {
 }
 
 fun Block.validate() {
+    // ALL block should have been mined
+    isMined || throw BlockchainException.BlockException("isMined")
+    hash.difficulty >= difficulty || throw BlockchainException.BlockException("difficulty")
     if (isGenesis) {
         this == Consensus.genesis.copy(nonce = nonce) || throw BlockchainException.ChainException("genesis")
     } else {
         // ALL block should follow Genesis
         height > Consensus.genesis.height || throw BlockchainException.BlockException("height")
+        previous != null || throw BlockchainException.BlockException("previous")
     }
     // ALL block should have a single coinbase tx
     transactions.count { it.isCoinbase } == 1 || throw BlockchainException.BlockException("coinbases")
     // ALL block should have a valid coinbase tx
     coinbase.isCoinbase || throw BlockchainException.BlockException("coinbase")
+    coinbase.amount == Consensus.reward(height) || throw BlockchainException.BlockException("reward")
     // ALL block should respect blockSize
     size <= Consensus.Rules.blockSize || throw BlockchainException.BlockException("size")
-    // ALL block should have been mined
-    isMined || throw BlockchainException.BlockException("isMined")
-    // ALL mined block should be proof-checked
-    hash.difficulty >= difficulty || throw BlockchainException.BlockException("difficulty")
     // ALL tx should be valid
     transactions.forEach { it.validate() }
 }

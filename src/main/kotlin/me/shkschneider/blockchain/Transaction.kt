@@ -19,7 +19,7 @@ data class Transaction(
 
     val isCoinbase: Boolean get() = inputs.isEmpty()
 
-    val amount: Coin get() = inputs.toCoin()
+    val amount: Coin get() = if (isCoinbase) outputs.toCoin() else inputs.toCoin()
     val fees: Coin
         get() = (if (isCoinbase) Coin(sat = 0) else inputs.toCoin() - outputs.toCoin()).also {
             it >= 0 || throw BlockchainException.TransactionException("fees")
