@@ -10,6 +10,7 @@ import me.shkschneider.participants.ColdWallet
 import me.shkschneider.participants.HotWallet
 import me.shkschneider.participants.Node
 import me.shkschneider.print
+import java.util.concurrent.TimeUnit
 
 object Application {
 
@@ -30,6 +31,8 @@ object Application {
             unlock(Consensus.origin.private)
             sign(Consensus.origin.private)
         }
+        Thread.sleep(TimeUnit.SECONDS.toMillis(1))
+        chain.add(tx)
         chain.add(tx)
         val node1 = Node(chain, hotWallet1)
         chain.add(node1.mine())

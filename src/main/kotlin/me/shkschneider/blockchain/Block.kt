@@ -20,7 +20,10 @@ data class Block(
 
     val hash: Hash get() = data.toHash()
 
-    val coinbase: Transaction get() = transactions.first().takeIf { it.isCoinbase } ?: throw BlockchainException.BlockException("coinbase")
+    val isMined: Boolean get() = nonce != 0.toLong()
+    val isGenesis: Boolean get() = height == 0
+    val coinbase: Transaction
+        get() = transactions.first().takeIf { it.isCoinbase } ?: throw BlockchainException.BlockException("coinbase")
 
     val inputs: List<TransactionOutput> get() = transactions.flatMap { it.inputs }
     val outputs: List<TransactionOutput> get() = transactions.flatMap { it.outputs }
