@@ -33,5 +33,13 @@ Implementation
 - Blocks (coinbase + transactions) + proof
 - Chain (blocks, mempool, utxos)
 - Wallets (private key, public key)
-- Miner
+- Miners
 - **No network**
+
+Formats
+-------
+
+- Addresses: Base58
+- Signatures: Base64
+- (un)lockScript: Hex
+- Proof: Hash

@@ -26,7 +26,7 @@ object Application {
 
         val tx = Transaction(
             inputs = mutableListOf(chain.blocks.flatMap { it.outputs }.first()),
-            outputs = mutableListOf(TransactionOutput.coinbase(Consensus.reward(chain.height), hotWallet1))
+            outputs = mutableListOf(TransactionOutput.coinbase(Consensus.Rules.reward(chain.height), hotWallet1))
         ).apply {
             unlock(Consensus.origin.private)
             sign(Consensus.origin.private)
@@ -54,10 +54,10 @@ object Application {
             println()
             chain.utxos.forEach { it.print() }
         }
-        hotWallet1.balance() == (chain.blocks[0].outputs.toCoin() + Consensus.reward(1) - 42 - 1) || throw BlockchainException.WalletException(
+        hotWallet1.balance() == (chain.blocks[0].outputs.toCoin() + Consensus.Rules.reward(1) - 42 - 1) || throw BlockchainException.WalletException(
             "balance"
         )
-        hotWallet2.balance() == (Consensus.reward(2) + 42 + 1) || throw BlockchainException.WalletException("balance")
+        hotWallet2.balance() == (Consensus.Rules.reward(2) + 42 + 1) || throw BlockchainException.WalletException("balance")
         chain.validate()
     }
 

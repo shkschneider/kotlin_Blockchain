@@ -30,7 +30,7 @@ open class HotMiner(
             height = chain.height,
             difficulty = chain.difficulty
         ).apply {
-            val reward = Consensus.reward(chain.height) + txs.fees
+            val reward = Consensus.Rules.reward(chain.height) + txs.fees
             val coinbase = Transaction.coinbase(reward, coldWallet).also {
                 coldWallet.sign(it)
             }

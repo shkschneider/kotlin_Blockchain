@@ -13,7 +13,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-internal fun txo(claimed: Boolean, amount: Coin = Consensus.reward(0)) = TransactionOutput(
+internal fun txo(claimed: Boolean, amount: Coin = Consensus.Rules.reward(0)) = TransactionOutput(
     to = Address(Consensus.origin.public),
     amount = amount
 ).apply {

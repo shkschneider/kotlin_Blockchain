@@ -56,7 +56,7 @@ fun Block.validate() {
     size <= Consensus.Rules.blockSize || throw BlockchainException.BlockException("size")
     // ALL block should have a valid coinbase tx
     coinbase.isCoinbase || throw BlockchainException.BlockException("coinbase")
-    coinbase.amount == Consensus.reward(height) + fees || throw BlockchainException.BlockException("reward")
+    coinbase.amount == Consensus.Rules.reward(height) + fees || throw BlockchainException.BlockException("reward")
     // ALL tx should be valid
     transactions.forEach { it.validate() }
 }

@@ -33,9 +33,9 @@ class Chain {
 
     fun estimatedSupply(): Coin {
         var height = 0
-        var coins = Consensus.reward(height)
+        var coins = Consensus.Rules.reward(height)
         while (true) {
-            val reward = Consensus.reward(++height)
+            val reward = Consensus.Rules.reward(++height)
             if (reward.sat <= 1) break
             coins += reward
         }

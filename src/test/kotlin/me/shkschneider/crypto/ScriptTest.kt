@@ -25,7 +25,7 @@ class ScriptTest(pair: Pair<PrivateKey, TransactionOutput>) {
                 add(
                     keyPair.private to TransactionOutput(
                         to = Address(keyPair.public),
-                        amount = Consensus.reward(0)
+                        amount = Consensus.Rules.reward(0)
                     )
                 )
             }

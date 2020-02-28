@@ -18,7 +18,7 @@ internal fun blk(height: Int) =
                     coinbase = true,
                     signed = true,
                     claimed = false,
-                    amount = Consensus.reward(height)
+                    amount = Consensus.Rules.reward(height)
                 )
             ),
             difficulty = Consensus.genesis.difficulty
@@ -88,7 +88,7 @@ class BlockTest {
         blk(height = 1)
             .copy(transactions = mutableListOf(
                 tx(coinbase = true, signed = true, claimed = false).apply {
-                    outputs = mutableListOf(outputs.first().copy(amount = Consensus.reward(0) * 2))
+                    outputs = mutableListOf(outputs.first().copy(amount = Consensus.Rules.reward(0) * 2))
                 }
             ))
             .mine()

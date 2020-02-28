@@ -2,8 +2,8 @@ package me.shkschneider.consensus
 
 import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Transaction
-import me.shkschneider.data.Coin
 import me.shkschneider.crypto.KeyPair
+import me.shkschneider.data.Coin
 import me.shkschneider.participants.ColdWallet
 
 object Consensus {
@@ -19,6 +19,7 @@ object Consensus {
     }
 
     private val versions = listOf(
+        "0.1.3" to "e4f5471af51dec7fa3f5378649de825a7cf3b7bc",
         "0.1.2" to "48dc804af4a64a0fb46349beef10e94f4fef6a08",
         "0.1.1" to "a73777f588f6e474db8b32b1c13fd9f5f318c807",
         "0.1.0" to "fe753b23556364128df95d2ef135d87743e9d4a7"
@@ -29,12 +30,12 @@ object Consensus {
 
         const val prefix: Char = '0'
         const val blockSize: Int = 10
-        const val halving: Int = 10
+        private const val halving: Int = 10
+
+        fun reward(height: Int): Coin =
+            Coin(bit = 1.0 / ((height / halving) + 1))
 
     }
-
-    fun reward(height: Int): Coin =
-        Coin(bit = 1.0 / ((height / Rules.halving) + 1))
 
     val origin: KeyPair = KeyPair.Factory("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks")
 
@@ -47,9 +48,11 @@ object Consensus {
         val coldWallet = ColdWallet(origin.private, origin.public)
         add(
             Transaction.coinbase(
-                reward(0),
+                Rules.reward(0),
                 coldWallet
-            ).also { coldWallet.sign(it) }
+            ).also {
+                coldWallet.sign(it)
+            }
         )
     }
 

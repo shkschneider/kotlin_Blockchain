@@ -9,7 +9,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal fun tx(coinbase: Boolean, signed: Boolean, claimed: Boolean, amount: Coin = Consensus.reward(0)) = Transaction(
+internal fun tx(coinbase: Boolean, signed: Boolean, claimed: Boolean, amount: Coin = Consensus.Rules.reward(0)) = Transaction(
     inputs = mutableListOf(),
     outputs = mutableListOf(txo(claimed = false, amount = amount))
 ).apply {
