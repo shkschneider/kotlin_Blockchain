@@ -6,6 +6,6 @@ data class Address(val publicKey: PublicKey) : Data() {
 
     override fun data(): ByteArray = publicKey.encoded
 
-    override fun toString(): String = data.toHash()
+    override fun toString(): String = data.toHash().toByteArray().toBase58()
 
 }
