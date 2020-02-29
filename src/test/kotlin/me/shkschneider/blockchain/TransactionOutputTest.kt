@@ -1,5 +1,7 @@
 package me.shkschneider.blockchain
 
+import io.mockk.every
+import io.mockk.mockk
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
@@ -39,6 +41,18 @@ class TransactionOutputTest {
     @Test(expected = BlockchainException.TransactionOutputException::class)
     fun `negative amount`() {
         txo(claimed = false, amount = Coin(-1)).validate()
+    }
+
+    @Test(expected = BlockchainException.TransactionOutputException::class)
+    fun `invalid lockScript`() {
+        val txo = txo(claimed = false, amount = Consensus.Rules.reward(0))
+        with(mockk<TransactionOutput>()) {
+            every { to } returns txo.to
+            every { amount } returns txo.amount
+            every { lockScript } returns Random.nextBytes(256).toHex()
+            every { data } returns txo.data
+            validate()
+        }
     }
 
     @Test

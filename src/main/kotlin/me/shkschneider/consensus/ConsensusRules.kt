@@ -4,6 +4,7 @@ import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Chain
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
+import me.shkschneider.crypto.Hmac
 import me.shkschneider.crypto.verify
 import me.shkschneider.data.difficulty
 import me.shkschneider.data.fromBase64
@@ -11,6 +12,9 @@ import me.shkschneider.data.fromHex
 import me.shkschneider.data.toCoin
 
 fun TransactionOutput.validate() {
+    // ALL txo should have a valid lockScript
+    Hmac.verify(to.publicKey.encoded, data, lockScript.fromHex()) ||
+        throw BlockchainException.TransactionOutputException("lockScript")
     if (isClaimed) {
         // ALL claimed txo should have unlockScript matching lockScript
         to.publicKey.verify(lockScript.fromHex(), requireNotNull(unlockScript).fromHex()) == true ||
