@@ -2,36 +2,25 @@ package me.shkschneider.participants
 
 import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
-import me.shkschneider.crypto.PrivateKey
-import me.shkschneider.crypto.PublicKey
-import me.shkschneider.crypto.sign
-import me.shkschneider.crypto.verify
+import me.shkschneider.crypto.KeyPair
 import me.shkschneider.data.Address
-import me.shkschneider.data.Base64
 import me.shkschneider.data.Coin
-import me.shkschneider.data.fromBase64
-import me.shkschneider.data.toBase64
 import me.shkschneider.data.toCoin
 import me.shkschneider.stringOf
 
 open class ColdWallet(
-    protected val private: PrivateKey,
-    private val public: PublicKey
+    private val keyPair: KeyPair
 ) {
 
-    fun unlock(tx: Transaction) = with(tx) {
-        unlock(private)
+    fun unlock(tx: Transaction) {
+        tx.unlock(keyPair.private)
     }
 
-    fun sign(tx: Transaction) = with(tx) {
-        sign(private)
+    fun sign(tx: Transaction) {
+        tx.sign(keyPair.private)
     }
 
-    fun sign(msg: String): Base64 = private.sign(msg.toByteArray()).toBase64()
-
-    fun verify(msg: String, signature: Base64) = public.verify(msg.toByteArray(), signature.fromBase64())
-
-    fun address(): Address = Address(public)
+    fun address(): Address = Address(keyPair.public)
 
     protected fun outgoing(inputs: MutableList<TransactionOutput>, to: Address, amount: Coin, fees: Coin): Transaction {
         return Transaction(inputs = inputs).apply {
@@ -42,8 +31,8 @@ open class ColdWallet(
                 outputs.add(TransactionOutput(address(), change))
             }
         }.apply {
-            unlock(private)
-            sign(private)
+            unlock(keyPair.private)
+            sign(keyPair.private)
         }
     }
 

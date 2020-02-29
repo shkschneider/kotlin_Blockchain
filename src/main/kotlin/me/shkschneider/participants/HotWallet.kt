@@ -5,8 +5,6 @@ import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.validate
 import me.shkschneider.crypto.KeyPair
-import me.shkschneider.crypto.PrivateKey
-import me.shkschneider.crypto.PublicKey
 import me.shkschneider.data.Address
 import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
@@ -14,18 +12,8 @@ import me.shkschneider.stringOf
 
 class HotWallet(
     private val chain: Chain,
-    private: PrivateKey,
-    public: PublicKey
-) : ColdWallet(private, public) {
-
-    companion object {
-
-        @Suppress("FunctionName")
-        fun Factory(chain: Chain, seed: String? = null) = with(KeyPair.Factory(seed)) {
-            HotWallet(chain, private, public)
-        }
-
-    }
+    keyPair: KeyPair
+) : ColdWallet(keyPair) {
 
     fun balance(): Coin =
         chain.utxos.filter { it.to == address() }.toCoin()

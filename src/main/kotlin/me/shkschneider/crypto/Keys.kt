@@ -7,10 +7,10 @@ import java.security.SignatureException
 typealias PrivateKey = java.security.PrivateKey
 
 @Throws(SignatureException::class)
-fun PrivateKey.sign(msg: ByteArray): ByteArray =
+internal fun PrivateKey.sign(data: ByteArray): ByteArray =
     Crypto.signature().apply {
         initSign(this@sign)
-        update(msg)
+        update(data)
     }.run {
         sign()
     }
@@ -20,10 +20,10 @@ fun PrivateKey.sign(msg: ByteArray): ByteArray =
 typealias PublicKey = java.security.PublicKey
 
 @Throws(SignatureException::class)
-fun PublicKey.verify(msg: ByteArray, signature: ByteArray): Boolean =
+internal fun PublicKey.verify(data: ByteArray, signature: ByteArray): Boolean =
     Crypto.signature().apply {
         initVerify(this@verify)
-        update(msg)
+        update(data)
     }.run {
         verify(signature)
     }

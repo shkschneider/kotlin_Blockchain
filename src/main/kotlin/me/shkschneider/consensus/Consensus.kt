@@ -45,7 +45,7 @@ object Consensus {
         difficulty = 1, // hard-coded
         nonce = 0
     ).apply {
-        val coldWallet = ColdWallet(origin.private, origin.public)
+        val coldWallet = ColdWallet(origin)
         add(
             Transaction.coinbase(
                 Rules.reward(0),

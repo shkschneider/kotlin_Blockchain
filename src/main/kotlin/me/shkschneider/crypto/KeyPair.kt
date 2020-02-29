@@ -9,7 +9,7 @@ class KeyPair private constructor(
 
         @Suppress("FunctionName")
         fun Factory(seed: String? = null): KeyPair {
-            val keyPair = Crypto.keyPairGenerator(seed).generateKeyPair()
+            val keyPair = Crypto.keygen(seed).generateKeyPair()
             return KeyPair(keyPair.private, keyPair.public)
         }
 

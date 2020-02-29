@@ -4,6 +4,7 @@ import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
+import me.shkschneider.crypto.KeyPair
 import me.shkschneider.data.Coin
 import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdWallet
@@ -19,24 +20,24 @@ object Application {
         val chain = Chain()
         println(chain.estimatedSupply())
         println(chain)
-        val coldWallet = ColdWallet(Consensus.origin.private, Consensus.origin.public)
+        val coldWallet = ColdWallet(Consensus.origin)
         println(coldWallet)
-        val hotWallet1 = HotWallet.Factory(chain)
+        val hotWallet1 = HotWallet(chain, KeyPair.Factory())
         println(hotWallet1)
 
         val tx = Transaction(
             inputs = mutableListOf(chain.blocks.flatMap { it.outputs }.first()),
             outputs = mutableListOf(TransactionOutput.coinbase(Consensus.Rules.reward(chain.height), hotWallet1))
         ).apply {
-            unlock(Consensus.origin.private)
-            sign(Consensus.origin.private)
+            coldWallet.unlock(this)
+            coldWallet.sign(this)
         }
         Thread.sleep(TimeUnit.SECONDS.toMillis(1))
         chain.add(tx)
         chain.add(tx)
         val node1 = Node(chain, hotWallet1)
         chain.add(node1.mine())
-        val hotWallet2 = HotWallet.Factory(chain)
+        val hotWallet2 = HotWallet(chain, KeyPair.Factory())
         val node2 = Node(chain, hotWallet2)
         hotWallet1.send(to = hotWallet2.address(), amount = Coin(sat = 42), fees = Coin(sat = 1))
         chain.add(node2.mine())

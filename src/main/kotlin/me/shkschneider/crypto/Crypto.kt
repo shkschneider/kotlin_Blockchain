@@ -21,7 +21,7 @@ object Crypto {
         Signature.getInstance(Consensus.Algorithms.signature)
 
     @Throws(NoSuchAlgorithmException::class)
-    fun keyPairGenerator(seed: String? = null): KeyPairGenerator =
+    fun keygen(seed: String? = null): KeyPairGenerator =
         KeyPairGenerator.getInstance(Consensus.Algorithms.keys.first).apply {
             initialize(
                 Consensus.Algorithms.keys.second,
