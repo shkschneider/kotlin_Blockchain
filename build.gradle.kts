@@ -1,9 +1,9 @@
 plugins {
     // https://github.com/JetBrains/kotlin/blob/master/ChangeLog.md
-    kotlin("jvm") version "1.3.61"
-    application
+    id("org.jetbrains.kotlin.jvm") version "1.3.61"
     // https://github.com/jeremymailen/kotlinter-gradle/releases
     id("org.jmailen.kotlinter") version "2.3.1"
+    application
 }
 
 repositories {
@@ -11,33 +11,20 @@ repositories {
     mavenCentral()
 }
 
-tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-    wrapper {
-        // https://gradle.org/releases/
-        gradleVersion = "6.2.1"
-        distributionType = Wrapper.DistributionType.BIN
-    }
-}
+apply(from = "gradle/gradle.gradle")
+apply(from = "gradle/kotlin.gradle")
 
 application {
+    applicationName = rootProject.name
     mainClassName = "Application"
 }
-
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit"))
-    testImplementation("io.mockk:mockk:1.+")
+    implementation("org.jetbrains.kotlin", "kotlin-stdlib")
+}
+dependencies {
+    testImplementation("org.jetbrains.kotlin", "kotlin-test")
+    testImplementation("org.jetbrains.kotlin", "kotlin-test-junit")
+    testImplementation("io.mockk", "mockk", "1.+")
 }
 
-kotlinter {
-    ignoreFailures = false
-    indentSize = 4
-    continuationIndentSize = 4
-    reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = false
-    disabledRules = arrayOf("no-blank-line-before-rbrace", "import-ordering")
-}
+apply(from = "gradle/kotlinter.gradle")
