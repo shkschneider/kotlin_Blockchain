@@ -1,30 +1,33 @@
 plugins {
-    // https://github.com/JetBrains/kotlin/blob/master/ChangeLog.md
-    id("org.jetbrains.kotlin.jvm") version "1.3.61"
-    // https://github.com/jeremymailen/kotlinter-gradle/releases
-    id("org.jmailen.kotlinter") version "2.3.1"
-    application
+    kotlin("jvm") version Versions.kotlin
 }
 
-repositories {
-    jcenter()
-    mavenCentral()
+println("Gradle ${gradle.gradleVersion}")
+
+// repositories
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
 }
 
-apply(from = "gradle/gradle.gradle")
-apply(from = "gradle/kotlin.gradle")
-
-application {
-    applicationName = rootProject.name
-    mainClassName = "Application"
-}
-dependencies {
-    implementation("org.jetbrains.kotlin", "kotlin-stdlib")
-}
-dependencies {
-    testImplementation("org.jetbrains.kotlin", "kotlin-test")
-    testImplementation("org.jetbrains.kotlin", "kotlin-test-junit")
-    testImplementation("io.mockk", "mockk", "1.+")
+// gradlew
+tasks {
+    wrapper {
+        gradleVersion = Versions.gradle
+        distributionType = Wrapper.DistributionType.BIN
+    }
 }
 
-apply(from = "gradle/kotlinter.gradle")
+// kotlin.jvm
+allprojects {
+    pluginManager.withPlugin(Plugins.kotlinJvm) {
+        dependencies {
+            implementation("org.jetbrains.kotlin", "kotlin-stdlib")
+        }
+    }
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+}

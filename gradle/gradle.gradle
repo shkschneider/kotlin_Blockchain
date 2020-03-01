@@ -1,7 +1,0 @@
-tasks {
-    wrapper {
-        // https://gradle.org/releases/
-        gradleVersion = "6.2.1"
-        distributionType = Wrapper.DistributionType.BIN
-    }
-}

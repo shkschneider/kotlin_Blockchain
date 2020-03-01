@@ -1,5 +1,3 @@
-package me.shkschneider
-
 import me.shkschneider.blockchain.Block
 import me.shkschneider.blockchain.Chain
 import me.shkschneider.blockchain.Transaction

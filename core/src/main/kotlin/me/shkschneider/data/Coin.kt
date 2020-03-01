@@ -5,10 +5,10 @@ import me.shkschneider.blockchain.TransactionOutput
 import me.shkschneider.stringOf
 import kotlin.math.roundToInt
 
-internal fun List<TransactionOutput>.toCoin(): Coin =
+fun List<TransactionOutput>.toCoin(): Coin =
     Coin(sat = sumBy { it.amount.sat })
 
-internal val List<Transaction>.fees: Coin
+val List<Transaction>.fees: Coin
     get() = Coin(sat = sumBy { it.fees.sat })
 
 /**

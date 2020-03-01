@@ -10,7 +10,6 @@ import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.participants.HotWallet
 import me.shkschneider.participants.Node
-import me.shkschneider.print
 import java.util.concurrent.TimeUnit
 
 object Application {
