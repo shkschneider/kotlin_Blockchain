@@ -5,18 +5,19 @@ import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.sign
 import me.shkschneider.data.Address
 import me.shkschneider.data.Coin
-import me.shkschneider.data.Data
+import me.shkschneider.data.Timestamp
+import me.shkschneider.data.toHex
 import me.shkschneider.data.Hex
 import me.shkschneider.data.fromHex
-import me.shkschneider.data.toBase64
-import me.shkschneider.data.toHex
+import me.shkschneider.data.timestamp
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.stringOf
 
 data class TransactionOutput(
     val to: Address,
-    val amount: Coin
-) : Data() {
+    val amount: Coin,
+    val time: Timestamp = timestamp
+) {
 
     val lockScript: Hex = Hmac.sign(to.publicKey.encoded, data).toHex()
     var unlockScript: Hex? = null
@@ -27,9 +28,9 @@ data class TransactionOutput(
         unlockScript = privateKey.sign(lockScript.fromHex()).toHex()
     }
 
-    override fun data(): ByteArray = stringOf(
+    val data: ByteArray get() = stringOf(
         time,
-        to.publicKey.encoded.toBase64(),
+        to,
         amount.sat
     ).toByteArray()
 
@@ -44,8 +45,8 @@ data class TransactionOutput(
 
         fun coinbase(reward: Coin, coldWallet: ColdWallet): TransactionOutput =
             TransactionOutput(
-                coldWallet.address(),
-                reward
+                to = coldWallet.address(),
+                amount = reward
             )
 
     }

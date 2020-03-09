@@ -4,8 +4,9 @@ import me.shkschneider.consensus.BlockchainException
 import me.shkschneider.consensus.Consensus
 import me.shkschneider.consensus.validate
 import me.shkschneider.data.Coin
-import me.shkschneider.data.Data
 import me.shkschneider.data.Hash
+import me.shkschneider.data.Timestamp
+import me.shkschneider.data.timestamp
 import me.shkschneider.data.toBase64
 import me.shkschneider.data.toHash
 import me.shkschneider.stringOf
@@ -15,8 +16,9 @@ data class Block(
     val previous: Hash?,
     val transactions: MutableList<Transaction> = mutableListOf(),
     val difficulty: Int = Consensus.genesis.difficulty,
+    val time: Timestamp = timestamp,
     var nonce: Long = 0 // proof-of-work
-) : Data() {
+) {
 
     val hash: Hash get() = data.toHash()
 
@@ -35,7 +37,7 @@ data class Block(
         return transactions.add(tx)
     }
 
-    override fun data(): ByteArray = stringOf(
+    val data: ByteArray get() = stringOf(
         time,
         height,
         previous,

@@ -2,10 +2,8 @@ package me.shkschneider.data
 
 import me.shkschneider.crypto.PublicKey
 
-data class Address(val publicKey: PublicKey) : Data() {
+data class Address(val publicKey: PublicKey) {
 
-    override fun data(): ByteArray = publicKey.encoded
-
-    override fun toString(): String = data.toHash().toByteArray().toBase58()
+    override fun toString(): String = publicKey.encoded.toHash().toByteArray().toBase58()
 
 }

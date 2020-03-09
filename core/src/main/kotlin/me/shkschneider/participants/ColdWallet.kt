@@ -22,8 +22,8 @@ open class ColdWallet(
 
     fun address(): Address = Address(keyPair.public)
 
-    protected fun outgoing(inputs: MutableList<TransactionOutput>, to: Address, amount: Coin, fees: Coin): Transaction {
-        return Transaction(inputs = inputs).apply {
+    protected fun outgoing(inputs: List<TransactionOutput>, to: Address, amount: Coin, fees: Coin): Transaction {
+        return Transaction(inputs = inputs.toMutableList()).apply {
             val txo = TransactionOutput(to, amount)
             outputs.add(txo)
             val change: Coin = (inputs.toCoin() - amount) - fees

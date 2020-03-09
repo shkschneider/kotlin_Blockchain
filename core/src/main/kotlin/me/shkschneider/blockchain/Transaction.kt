@@ -5,7 +5,8 @@ import me.shkschneider.crypto.PrivateKey
 import me.shkschneider.crypto.sign
 import me.shkschneider.data.Base64
 import me.shkschneider.data.Coin
-import me.shkschneider.data.Data
+import me.shkschneider.data.Timestamp
+import me.shkschneider.data.timestamp
 import me.shkschneider.data.toBase64
 import me.shkschneider.data.toCoin
 import me.shkschneider.participants.ColdWallet
@@ -14,8 +15,9 @@ import me.shkschneider.stringOf
 data class Transaction(
     var inputs: MutableList<TransactionOutput> = mutableListOf(),
     var outputs: MutableList<TransactionOutput> = mutableListOf(),
-    var signature: Base64? = null
-) : Data() {
+    var signature: Base64? = null,
+    val time: Timestamp = timestamp
+) {
 
     val isCoinbase: Boolean get() = inputs.isEmpty()
 
@@ -36,7 +38,7 @@ data class Transaction(
         signature = privateKey.sign(data).toBase64()
     }
 
-    override fun data(): ByteArray = stringOf(
+    val data: ByteArray get() = stringOf(
         time,
         inputs.map { it.data.toBase64() },
         outputs.map { it.data.toBase64() }

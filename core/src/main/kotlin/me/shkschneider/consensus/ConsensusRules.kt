@@ -48,6 +48,10 @@ fun Transaction.validate() {
     }
     // ALL tx inputs should be claimed
     inputs.all { it.isClaimed } || throw BlockchainException.TransactionException("inputs isClaimed")
+    // ALL tx input should be used only once (double-spend)
+    inputs.all { txo ->
+        inputs.count { it == txo } == 1 || throw BlockchainException.TransactionException("double-spend")
+    }
     // ALL input should be valid
     inputs.forEach { it.validate() }
     // ALL output should be valid
@@ -99,7 +103,7 @@ fun Chain.validate() {
         throw BlockchainException.ChainException("blocks unlockScripts!=utxos.size")
     utxos.forEach { txo ->
         // NONE txo should have been spent as input in a block
-        blocks.flatMap { it.inputs }.contains(txo) && throw BlockchainException.ChainException("utxos blocks")
+        blocks.flatMap { it.inputs }.contains(txo) && throw BlockchainException.ChainException("utxo spent")
         // ALL txo should be valid
         txo.validate()
     }
