@@ -1,0 +1,8 @@
+dependencyUpdates {
+    checkForGradleUpdate = true
+    outputFormatter = { result ->
+        result.outdated.dependencies.forEach {
+            println "${it.group}:${it.name}:${it.version} -> ${it.available.release ?: it.available.milestone}"
+        }
+    }
+}

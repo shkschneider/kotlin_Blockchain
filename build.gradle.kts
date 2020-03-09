@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version Versions.kotlin
+    versions version Versions.versions
 }
 
 println("Gradle ${gradle.gradleVersion}")
@@ -31,3 +32,7 @@ allprojects {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
 }
+
+// versions
+apply(from = "$rootDir/gradle/versions.gradle")
+tasks.alias("updates", "dependencyUpdates")
