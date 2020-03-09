@@ -4,11 +4,11 @@ import me.shkschneider.blockchain.Transaction
 import me.shkschneider.blockchain.TransactionOutput
 
 internal fun TransactionOutput.print() {
-    println(this)
+    println(toString())
 }
 
 internal fun Transaction.print() {
-    println(this)
+    println(toString())
     inputs.forEach { txo ->
         println(" <- $txo")
     }
@@ -18,7 +18,7 @@ internal fun Transaction.print() {
 }
 
 internal fun Block.print() {
-    println(this)
+    println(toString())
     transactions.forEach { tx ->
         println(" $tx")
         tx.inputs.forEach { txo ->
@@ -31,7 +31,7 @@ internal fun Block.print() {
 }
 
 internal fun Chain.print() {
-    println(this)
+    println(toString())
     blocks.forEach { it.print() }
     mempool.forEach { it.print() }
     utxos.forEach { it.print() }
