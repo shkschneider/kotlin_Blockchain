@@ -7,7 +7,6 @@ import me.shkschneider.consensus.validate
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import kotlin.random.Random
 
 private const val times = 10
 
@@ -20,7 +19,9 @@ class MiningTest(private val blk: Block) {
         @Parameterized.Parameters
         fun parameters() = mutableListOf<Block>().apply {
             repeat(times) {
-                add(blk(height = Random.nextInt(1, 100)))
+                add(blk(height = 1))
+                add(blk(height = 2))
+                add(blk(height = 3))
             }
         }
 

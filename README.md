@@ -23,7 +23,7 @@ Specifications
   - halving: 10 blocks
   - `origin` KeyPair
   - `genesis` block
-  - difficulty: 1 (fixed)
+  - difficulty: 1 + 1 every halving
 
 Implementation
 --------------
@@ -41,7 +41,6 @@ Limitations
 - Single address per KeyPair
 - Cannot spend mempool tx
 - Unlimited blocks
-- Fixed difficulty
 - Full memory storage
 - No network
 

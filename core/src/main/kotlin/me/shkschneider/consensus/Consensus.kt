@@ -30,10 +30,13 @@ object Consensus {
 
         const val prefix: Char = '0'
         const val blockSize: Int = 10
-        private const val halving: Int = 10
+        const val halving: Int = 10
+
+        fun difficulty(height: Int) =
+            ((height / halving) + 1)
 
         fun reward(height: Int): Coin =
-            Coin(bit = 1.0 / ((height / halving) + 1))
+            Coin(bit = 1.0 / difficulty(height))
 
     }
 
@@ -42,7 +45,7 @@ object Consensus {
     val genesis: Block = Block(
         height = 0,
         previous = null,
-        difficulty = 1, // hard-coded
+        difficulty = Rules.difficulty(0),
         nonce = 0
     ).apply {
         val coldWallet = ColdWallet(origin)

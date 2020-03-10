@@ -12,23 +12,18 @@ import java.util.concurrent.TimeUnit
 
 object Application {
 
+    private val chain = Chain()
+    private val coldWallet = ColdWallet(Consensus.origin)
+    private val hotWallet1 = HotWallet(chain, KeyPair.Factory())
+    private val hotWallet2 = HotWallet(chain, KeyPair.Factory())
+    private val node1 = Node(chain, hotWallet1)
+    private val node2 = Node(chain, hotWallet2)
+
     @JvmStatic
     fun main(vararg argv: String) {
-        val chain = Chain()
         println(chain.estimatedSupply())
         println(chain)
-
-        assert(chain.height == 1)
         chain.validate()
-
-        val coldWallet = ColdWallet(Consensus.origin)
-        println(coldWallet)
-        val hotWallet1 = HotWallet(chain, KeyPair.Factory())
-        println(hotWallet1)
-        val hotWallet2 = HotWallet(chain, KeyPair.Factory())
-        println(hotWallet1)
-        val node1 = Node(chain, hotWallet1)
-        val node2 = Node(chain, hotWallet2)
 
         val amount = Consensus.Rules.reward(1) / 2
         chain.add(Transaction(
@@ -44,14 +39,10 @@ object Application {
         sleep(); chain.add(node1.mine())
         hotWallet1.send(to = hotWallet2.address(), amount = amount / 2, fees = Coin(0))
         sleep(); chain.add(node1.mine())
-
-        assert(chain.height == 2)
         chain.validate()
 
         hotWallet2.flush(hotWallet1.address(), Coin(0))
         sleep(); chain.add(node2.mine())
-
-        assert(chain.height == 3)
         chain.validate()
 
         chain.blocks.forEach { it.print() }
@@ -63,12 +54,17 @@ object Application {
             println()
             chain.utxos.forEach { it.print() }
         }
-        println(hotWallet1)
-        assert(node1.balance(hotWallet1.address()) == node2.balance(hotWallet1.address()))
         assert(node1.balance(hotWallet1.address()).sat == 250_000)
-        println(hotWallet2)
-        assert(node1.balance(hotWallet2.address()) == node2.balance(hotWallet2.address()))
         assert(node2.balance(hotWallet2.address()).sat == 100_000)
+
+        hotWallet2.flush(hotWallet1.address(), fees = Coin(sat = 0))
+        repeat(10) {
+            sleep(); chain.add(node2.mine())
+        }
+        chain.validate()
+        chain.print()
+        println(hotWallet1)
+        println(hotWallet2)
     }
 
     private fun sleep() = Thread.sleep(TimeUnit.SECONDS.toMillis(1))

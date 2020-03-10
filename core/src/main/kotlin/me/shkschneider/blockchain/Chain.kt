@@ -14,7 +14,7 @@ class Chain {
     val mempool: MutableList<Transaction> = mutableListOf()
     val height: Int get() = blocks.size
     val work: Int get() = blocks.sumBy { it.difficulty }
-    var difficulty: Int = 1 // hard-coded
+    val difficulty: Int get() = Consensus.Rules.difficulty(height)
 
     init {
         with(Consensus.genesis) {

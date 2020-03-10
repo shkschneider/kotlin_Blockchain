@@ -21,7 +21,7 @@ internal fun blk(height: Int) =
                     amount = Consensus.Rules.reward(height)
                 )
             ),
-            difficulty = Consensus.genesis.difficulty
+            difficulty = Consensus.Rules.difficulty(height)
         )
     }
 
