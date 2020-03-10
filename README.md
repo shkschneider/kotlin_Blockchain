@@ -34,7 +34,16 @@ Implementation
 - Chain (blocks, mempool, utxos)
 - Wallets (private key, public key)
 - Miners
-- **No network**
+
+Limitations
+-----------
+
+- Single address per KeyPair
+- Cannot spend mempool tx
+- Unlimited blocks
+- Fixed difficulty
+- Full memory storage
+- No network
 
 Formats
 -------
