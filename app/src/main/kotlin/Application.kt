@@ -48,7 +48,7 @@ object Application {
         assert(chain.height == 2)
         chain.validate()
 
-        hotWallet2.flush(to = hotWallet1.address(), fees = Coin(0))
+        hotWallet2.flush(hotWallet1.address(), Coin(0))
         sleep(); chain.add(node2.mine())
 
         assert(chain.height == 3)
@@ -64,9 +64,11 @@ object Application {
             chain.utxos.forEach { it.print() }
         }
         println(hotWallet1)
-        assert(hotWallet1.balance().sat == 250_000)
+        assert(node1.balance(hotWallet1.address()) == node2.balance(hotWallet1.address()))
+        assert(node1.balance(hotWallet1.address()).sat == 250_000)
         println(hotWallet2)
-        assert(hotWallet2.balance().sat == 100_000)
+        assert(node1.balance(hotWallet2.address()) == node2.balance(hotWallet2.address()))
+        assert(node2.balance(hotWallet2.address()).sat == 100_000)
     }
 
     private fun sleep() = Thread.sleep(TimeUnit.SECONDS.toMillis(1))
