@@ -4,4 +4,4 @@ import java.time.Instant
 
 typealias Timestamp = Long
 
-val timestamp get() = Instant.now().epochSecond
+val timestamp: Long get() = Instant.now().toEpochMilli()

@@ -8,7 +8,6 @@ import me.shkschneider.data.Coin
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.participants.HotWallet
 import me.shkschneider.participants.Node
-import java.util.concurrent.TimeUnit
 
 object Application {
 
@@ -36,13 +35,13 @@ object Application {
             coldWallet.unlock(this)
             coldWallet.sign(this)
         })
-        sleep(); chain.add(node1.mine())
+        chain.add(node1.mine())
         hotWallet1.send(to = hotWallet2.address(), amount = amount / 2, fees = Coin(0))
-        sleep(); chain.add(node1.mine())
+        chain.add(node1.mine())
         chain.validate()
 
         hotWallet2.flush(hotWallet1.address(), Coin(0))
-        sleep(); chain.add(node2.mine())
+        chain.add(node2.mine())
         chain.validate()
 
         chain.blocks.forEach { it.print() }
@@ -59,14 +58,12 @@ object Application {
 
         hotWallet2.flush(hotWallet1.address(), fees = Coin(sat = 0))
         repeat(10) {
-            sleep(); chain.add(node2.mine())
+            chain.add(node2.mine())
         }
         chain.validate()
         chain.print()
         println(hotWallet1)
         println(hotWallet2)
     }
-
-    private fun sleep() = Thread.sleep(TimeUnit.SECONDS.toMillis(1))
 
 }
