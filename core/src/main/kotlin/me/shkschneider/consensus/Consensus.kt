@@ -18,7 +18,10 @@ object Consensus {
 
     }
 
+    // sha1
     private val versions = listOf(
+        "0.1.5" to "e1c1d8f5dcbea0a1a6dc27ab80866312be4226e3",
+        "0.1.4" to "1fd003e5c1bb30c297db2e1e4cfed1d490e22ae0",
         "0.1.3" to "e4f5471af51dec7fa3f5378649de825a7cf3b7bc",
         "0.1.2" to "48dc804af4a64a0fb46349beef10e94f4fef6a08",
         "0.1.1" to "a73777f588f6e474db8b32b1c13fd9f5f318c807",
