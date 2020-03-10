@@ -15,16 +15,13 @@ class HotWallet(
     keyPair: KeyPair
 ) : ColdWallet(keyPair) {
 
-    private fun utxos(): List<TransactionOutput> =
-        chain.utxos.filter { it.to == address() }
-
-    fun balance(mempool: Boolean = false): Coin =
-        utxos().toCoin() // TODO mempool
+    fun balance(): Coin =
+        chain.utxos.filter { it.to == address() }.toCoin()
 
     fun send(to: Address, amount: Coin, fees: Coin = Coin(sat = 1)) {
         if (balance() < amount + fees) throw BlockchainException.WalletException("balance")
         val inputs = mutableListOf<TransactionOutput>()
-        utxos().sortedBy { it.amount }.forEach { utxo ->
+        chain.utxos.filter { it.to == address() }.sortedBy { it.amount }.forEach { utxo ->
             inputs += utxo
             if (inputs.toCoin() >= amount + fees) {
                 return@forEach
@@ -36,7 +33,10 @@ class HotWallet(
     }
 
     fun flush(to: Address, fees: Coin = Coin(sat = 1)) {
-        TODO()
+        if (balance() < fees) throw BlockchainException.WalletException("balance")
+        val tx = outgoing(chain.utxos.filter { it.to == address() }, to, balance(), fees)
+        tx.validate()
+        chain.add(tx)
     }
 
     override fun toString(): String = "HotWallet {" + stringOf(

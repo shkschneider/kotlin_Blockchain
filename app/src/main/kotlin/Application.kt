@@ -8,29 +8,27 @@ import me.shkschneider.data.Coin
 import me.shkschneider.participants.ColdWallet
 import me.shkschneider.participants.HotWallet
 import me.shkschneider.participants.Node
-import me.shkschneider.stringOf
 import java.util.concurrent.TimeUnit
-import kotlin.system.exitProcess
 
 object Application {
 
     @JvmStatic
     fun main(vararg argv: String) {
         val chain = Chain()
+        println(chain.estimatedSupply())
+        println(chain)
 
         assert(chain.height == 1)
         chain.validate()
 
         val coldWallet = ColdWallet(Consensus.origin)
-        println("coldWallet: $coldWallet")
+        println(coldWallet)
         val hotWallet1 = HotWallet(chain, KeyPair.Factory())
-        println("hotWallet1: $hotWallet1")
+        println(hotWallet1)
         val hotWallet2 = HotWallet(chain, KeyPair.Factory())
-        println("hotWallet2: $hotWallet2")
+        println(hotWallet1)
         val node1 = Node(chain, hotWallet1)
         val node2 = Node(chain, hotWallet2)
-        println(chain.estimatedSupply())
-        println(chain)
 
         val amount = Consensus.Rules.reward(1) / 2
         chain.add(Transaction(
@@ -50,7 +48,7 @@ object Application {
         assert(chain.height == 2)
         chain.validate()
 
-        hotWallet2.send(to = hotWallet1.address(), amount = Coin(sat = 42), fees = Coin(sat = 1))
+        hotWallet2.flush(to = hotWallet1.address(), fees = Coin(0))
         sleep(); chain.add(node2.mine())
 
         assert(chain.height == 3)
@@ -65,7 +63,10 @@ object Application {
             println()
             chain.utxos.forEach { it.print() }
         }
-        chain.validate()
+        println(hotWallet1)
+        assert(hotWallet1.balance().sat == 250_000)
+        println(hotWallet2)
+        assert(hotWallet2.balance().sat == 100_000)
     }
 
     private fun sleep() = Thread.sleep(TimeUnit.SECONDS.toMillis(1))
