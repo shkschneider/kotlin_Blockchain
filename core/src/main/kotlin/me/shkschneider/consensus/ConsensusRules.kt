@@ -11,17 +11,6 @@ import me.shkschneider.data.fromBase64
 import me.shkschneider.data.fromHex
 import me.shkschneider.data.toCoin
 
-/**
- * FIXME
-    Coin { bit=117.2029 cent=11720.29 milli=117202.9 micro=1172029.0 sat=11720290 }
-    Chain { blocks=1 mempool=0 utxos=1 work=1 difficulty=1 amount=[bit=1.0,sat=100000] }
-    ColdWallet { address=5vv7Cp2CkxrBTAAWToMvrHWEUTXLRA5NdjPLKLQ6YoY73G2v6Rf1Zok }
-    HotWallet { address=62h5BYcPgPeLKC9wS9F3X1kFDTLgxphaBjK1MyCuDCFhiAuXv9nsRgY balance=[bit=0.0,sat=0] }
-    Exception in thread "main" me.shkschneider.consensus.BlockchainException$BlockException: difficulty
-    at me.shkschneider.consensus.ConsensusRulesKt.validate(ConsensusRules.kt:49)
-    at me.shkschneider.blockchain.Chain.add(Chain.kt:54)
-    at Application.main(Application.kt:42)
- */
 fun TransactionOutput.validate() {
     // ALL txo should have a valid lockScript
     Hmac.verify(to.publicKey.encoded, data, lockScript.fromHex()) ||
