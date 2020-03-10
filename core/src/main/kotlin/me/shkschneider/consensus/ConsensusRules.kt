@@ -57,6 +57,8 @@ fun Block.validate() {
         // ALL block should follow Genesis
         height > Consensus.genesis.height || throw BlockchainException.BlockException("height")
         previous != null || throw BlockchainException.BlockException("previous")
+        // ALL block should have a correct difficulty
+        difficulty == Consensus.Rules.difficulty(height) || throw BlockchainException.BlockException("difficulty")
     }
     // ALL block should have a single coinbase tx
     transactions.count { it.isCoinbase } == 1 || throw BlockchainException.BlockException("coinbases")
